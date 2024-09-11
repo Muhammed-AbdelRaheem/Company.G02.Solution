@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Company.G02.DAL.Data.Contexts
 {
-    internal class AppDbContext:DbContext
+    public class AppDbContext:DbContext
     {
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

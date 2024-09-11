@@ -1,3 +1,5 @@
+using Company.G02.DAL.Data.Contexts;
+
 namespace Company.G02.PL
 {
     public class Program
@@ -8,6 +10,10 @@ namespace Company.G02.PL
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            //builder.Services.AddScoped<AppDbContext>();
+            builder.Services.AddDbContext<AppDbContext>();
+
 
             var app = builder.Build();
 
