@@ -1,3 +1,4 @@
+using Company.G02.BLL.Interfaces;
 using Company.G02.BLL.Repositories;
 using Company.G02.DAL.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,7 @@ namespace Company.G02.PL
             builder.Services.AddDbContext<AppDbContext>(
                                 //options => options.UseSqlServer("Server= . ; DataBase =  CompanyG02 ; Trusted_Connection =true;TrustServerCertificate=true"));
                                 options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefalutConnection")));
-            builder.Services.AddScoped<DepartmentRepository>();
+            builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>();
 
 
 
