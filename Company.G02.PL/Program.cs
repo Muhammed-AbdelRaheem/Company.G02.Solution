@@ -1,4 +1,6 @@
 using Company.G02.DAL.Data.Contexts;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Company.G02.PL
 {
@@ -12,7 +14,9 @@ namespace Company.G02.PL
             builder.Services.AddControllersWithViews();
 
             //builder.Services.AddScoped<AppDbContext>();
-            builder.Services.AddDbContext<AppDbContext>();
+            builder.Services.AddDbContext<AppDbContext>(
+                                //options => options.UseSqlServer("Server= . ; DataBase =  CompanyG02 ; Trusted_Connection =true;TrustServerCertificate=true"));
+                                options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefalutConnection")));
 
 
             var app = builder.Build();
