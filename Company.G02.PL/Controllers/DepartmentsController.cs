@@ -39,9 +39,23 @@ namespace Company.G02.PL.Controllers
                     return RedirectToAction("Index");
                 }
             }
-                return View(model);
+            return View(model);
 
-           
+
+        }
+
+        public IActionResult Details(int? id)
+        {
+
+            if (id is null) return BadRequest();
+            var departments = _departmentRepository.Get(id.Value);
+
+            if (departments is null)
+            {
+                return NotFound();
+            }
+            return View(departments);
+
         }
     }
 }
