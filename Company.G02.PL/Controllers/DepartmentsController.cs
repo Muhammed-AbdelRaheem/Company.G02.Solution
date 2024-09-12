@@ -57,5 +57,79 @@ namespace Company.G02.PL.Controllers
             return View(departments);
 
         }
+
+        [HttpGet]
+
+        public IActionResult Edit(int? id)
+        {
+            if (id is null)
+            {
+                return BadRequest();
+            }
+
+            var department = _departmentRepository.Get(id.Value);
+            if (department is null)
+            { return NotFound(); }
+            return View(department);
+        }
+
+
+        [HttpPost]
+        public IActionResult Edit(Department department)
+        {
+            if (ModelState.IsValid)
+            {
+
+                try
+                {
+                    _departmentRepository.Update(department);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+            }
+            return View(department);
+        }
+
+
+        public IActionResult Delete(int? id)
+        {
+            if (id is null)
+            {
+                return BadRequest();
+            }
+
+            var department = _departmentRepository.Get(id.Value);
+            if (department is null)
+            { return NotFound(); }
+            return View(department);
+        }
+
+
+        [HttpPost]
+        public IActionResult Delete(Department department, [FromRoute] int id)
+        {
+            if ((id != department.Id))
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                _departmentRepository.Delete(department);
+                return RedirectToAction(nameof(Index));
+
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
+
+            return View(department);
+        }
+
     }
+
 }
