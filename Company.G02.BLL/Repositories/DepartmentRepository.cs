@@ -9,44 +9,44 @@ using System.Threading.Tasks;
 
 namespace Company.G02.BLL.Repositories
 {
-    public class DepartmentRepository : IDepartmentRepository
+    public class DepartmentRepository :GenericRepository<Department>, IDepartmentRepository
     {
-        private readonly AppDbContext _context;
+        //private readonly AppDbContext _context;
 
-        public DepartmentRepository(AppDbContext contect)
+        public DepartmentRepository(AppDbContext context):base(context)
         {
-            _context = contect;
+            //_context = context;
         }
 
-        public IEnumerable<Department> GetAll()
-        {
-            return _context.Departments.ToList();
-        }
+        //public IEnumerable<Department> GetAll()
+        //{
+        //    return _context.Departments.ToList();
+        //}
 
-        Department IDepartmentRepository.Get(int id)
-        {
-            return _context.Departments.Find(id);
-        }
-        int IDepartmentRepository.Add(Department entity)
-        {
-            _context.Departments.Add(entity);
+        //Department IDepartmentRepository.Get(int id)
+        //{
+        //    return _context.Departments.Find(id);
+        //}
+        //int IDepartmentRepository.Add(Department entity)
+        //{
+        //    _context.Departments.Add(entity);
 
-            return _context.SaveChanges();
-        }
+        //    return _context.SaveChanges();
+        //}
 
-        int IDepartmentRepository.Update(Department entity)
-        {
-            _context.Departments.Update(entity);
+        //int IDepartmentRepository.Update(Department entity)
+        //{
+        //    _context.Departments.Update(entity);
 
-            return _context.SaveChanges();
-        }
+        //    return _context.SaveChanges();
+        //}
 
-        int IDepartmentRepository.Delete(Department entity)
-        {
-            _context.Departments.Remove(entity);
+        //int IDepartmentRepository.Delete(Department entity)
+        //{
+        //    _context.Departments.Remove(entity);
 
-            return _context.SaveChanges();
-        }
+        //    return _context.SaveChanges();
+        //}
 
 
 

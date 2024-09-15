@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Company.G02.DAL.Models
 {
-    public class Department
+    public class Department: BaseEntity
     {
         [Required(ErrorMessage ="Code Is Required")]
         public int Id { get; set; }
