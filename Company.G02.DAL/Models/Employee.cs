@@ -16,10 +16,11 @@ namespace Company.G02.DAL.Models
         [Range(25,60,ErrorMessage ="Age Must Be Between 25 and 60")]
         public int? Age { get; set; }
 
-        [RegularExpression("[0-9]{1,5}( [a-zA-Z.]*){1,4},?( [a-zA-Z]*){1,3},? [a-zA-Z]{2},? [0-9]{5}\r\n",ErrorMessage ="address must be like 123-street-city-country -zip")]
+        //[RegularExpression("[0-9]{1,5}( [a-zA-Z.]*){1,4},?( [a-zA-Z]*){1,3},? [a-zA-Z]{2},? [0-9]{5}\r\n",ErrorMessage ="address must be like 123-street-city-country -zip")]
         public string Address { get; set; }
 
         [Required(ErrorMessage = "Salary Is Required")]
+        [DataType(DataType.Currency)]
         public decimal Salary { get; set; }
 
         [DataType(DataType.EmailAddress)]

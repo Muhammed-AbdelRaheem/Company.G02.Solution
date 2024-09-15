@@ -20,6 +20,7 @@ namespace Company.G02.PL
                                 //options => options.UseSqlServer("Server= . ; DataBase =  CompanyG02 ; Trusted_Connection =true;TrustServerCertificate=true"));
                                 options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefalutConnection")));
             builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>();
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
 
 
