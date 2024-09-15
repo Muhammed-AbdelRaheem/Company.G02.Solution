@@ -28,6 +28,8 @@ namespace Company.G02.PL.Controllers
             return View();
         }
 
+        [ValidateAntiForgeryToken]
+
         [HttpPost]
         public IActionResult Create(Department model)
         {
@@ -44,7 +46,7 @@ namespace Company.G02.PL.Controllers
 
         }
 
-        public IActionResult Details(int? id)
+        public IActionResult Details(int? id , string viewName= "departments")
         {
 
             if (id is null) return BadRequest();
@@ -62,28 +64,39 @@ namespace Company.G02.PL.Controllers
 
         public IActionResult Edit(int? id)
         {
-            if (id is null)
+            //if (id is null)
+            //{
+            //    return BadRequest();
+            //}
+
+            //var department = _departmentRepository.Get(id.Value);
+            //if (department is null)
+            //{ return NotFound(); }
+            //return View(department);
+            return Details(id, "edit");
+
+        }
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public IActionResult Edit(Department department, [FromRoute] int id)
+        {
+
+            if (department.Id !=id)
             {
                 return BadRequest();
             }
-
-            var department = _departmentRepository.Get(id.Value);
-            if (department is null)
-            { return NotFound(); }
-            return View(department);
-        }
-
-
-        [HttpPost]
-        public IActionResult Edit(Department department)
-        {
             if (ModelState.IsValid)
             {
 
                 try
                 {
-                    _departmentRepository.Update(department);
+                 var Count =   _departmentRepository.Update(department);
+                    if (Count >0 )
+                    {
                     return RedirectToAction(nameof(Index));
+
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -96,17 +109,20 @@ namespace Company.G02.PL.Controllers
 
         public IActionResult Delete(int? id)
         {
-            if (id is null)
-            {
-                return BadRequest();
-            }
+            //if (id is null)
+            //{
+            //    return BadRequest();
+            //}
 
-            var department = _departmentRepository.Get(id.Value);
-            if (department is null)
-            { return NotFound(); }
-            return View(department);
+            //var department = _departmentRepository.Get(id.Value);
+            //if (department is null)
+            //{ return NotFound(); }
+            //return View(department);
+            return Details(id,"Delete");
+
         }
 
+        [ValidateAntiForgeryToken]
 
         [HttpPost]
         public IActionResult Delete(Department department, [FromRoute] int id)

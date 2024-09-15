@@ -24,7 +24,7 @@
     </div>
     <br />
     <br />
-    <a asp-controller="Departments" asp-action="Edit" class="btn btn-outwarning">Edit</a>
+    <a asp-controller="Departments" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
     <a asp-controller="Departments" asp-action="Index" class="btn btn-light">Back To List</a>
 </div>
 
