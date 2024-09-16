@@ -1,23 +1,22 @@
 ﻿using Company.G02.BLL.Interfaces;
-using Company.G02.BLL.Repositories;
 using Company.G02.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Company.G02.PL.Controllers
 {
-    public class DepartmentsController : Controller
+    public class EmployeesController : Controller
     {
-        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IEmployeeRepository _employeeRepository;
 
-        public DepartmentsController(IDepartmentRepository departmentRepository)
+        public EmployeesController(IEmployeeRepository  employeeRepository)
         {
-            _departmentRepository = departmentRepository;
+            _employeeRepository = employeeRepository;
         }
         [HttpGet]
         public IActionResult Index()
         {
-            var departments = _departmentRepository.GetAll();
-            return View(departments);
+            var Employees = _employeeRepository.GetAll();
+            return View(Employees);
         }
 
 
@@ -31,11 +30,11 @@ namespace Company.G02.PL.Controllers
         [ValidateAntiForgeryToken]
 
         [HttpPost]
-        public IActionResult Create(Department model)
+        public IActionResult Create(Employee model)
         {
             if (ModelState.IsValid)
             {
-                var count = _departmentRepository.Add(model);
+                var count = _employeeRepository.Add(model);
                 if (count > 0)
                 {
                     return RedirectToAction("Index");
@@ -46,17 +45,17 @@ namespace Company.G02.PL.Controllers
 
         }
 
-        public IActionResult Details(int? id , string viewName= "departments")
+        public IActionResult Details(int? id, string viewName = "employee")
         {
 
             if (id is null) return BadRequest();
-            var departments = _departmentRepository.Get(id.Value);
+            var Employee = _employeeRepository.Get(id.Value);
 
-            if (departments is null)
+            if (Employee is null)
             {
                 return NotFound();
             }
-            return View(departments);
+            return View(Employee);
 
         }
 
@@ -79,10 +78,10 @@ namespace Company.G02.PL.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public IActionResult Edit(Department department, [FromRoute] int id)
+        public IActionResult Edit(Employee employee, [FromRoute] int id)
         {
 
-            if (department.Id !=id)
+            if (employee.Id != id)
             {
                 return BadRequest();
             }
@@ -91,10 +90,10 @@ namespace Company.G02.PL.Controllers
 
                 try
                 {
-                 var Count =   _departmentRepository.Update(department);
-                    if (Count >0 )
+                    var Count = _employeeRepository.Update(employee);
+                    if (Count > 0)
                     {
-                    return RedirectToAction(nameof(Index));
+                        return RedirectToAction(nameof(Index));
 
                     }
                 }
@@ -103,7 +102,7 @@ namespace Company.G02.PL.Controllers
                     ModelState.AddModelError(string.Empty, ex.Message);
                 }
             }
-            return View(department);
+            return View(employee);
         }
 
 
@@ -118,23 +117,23 @@ namespace Company.G02.PL.Controllers
             //if (department is null)
             //{ return NotFound(); }
             //return View(department);
-            return Details(id,"Delete");
+            return Details(id, "Delete");
 
         }
 
         [ValidateAntiForgeryToken]
 
         [HttpPost]
-        public IActionResult Delete(Department department, [FromRoute] int id)
+        public IActionResult Delete(Employee employee, [FromRoute] int id)
         {
-            if ((id != department.Id))
+            if ((id != employee.Id))
             {
                 return BadRequest();
             }
 
             try
             {
-                _departmentRepository.Delete(department);
+                _employeeRepository.Delete(employee);
                 return RedirectToAction(nameof(Index));
 
             }
@@ -143,9 +142,7 @@ namespace Company.G02.PL.Controllers
                 ModelState.AddModelError(string.Empty, ex.Message);
             }
 
-            return View(department);
+            return View(employee);
         }
-
     }
-
 }
