@@ -35,6 +35,11 @@ namespace Company.G02.DAL.Models
         public DateTime DateOfCreation { get; set; }
 
 
+        public int? WorkForId { get; set; }
+
+        public Department? WorkFor { get; set; }
+
+
 
     }
 }

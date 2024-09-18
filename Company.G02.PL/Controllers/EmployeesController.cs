@@ -7,10 +7,12 @@ namespace Company.G02.PL.Controllers
     public class EmployeesController : Controller
     {
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IDepartmentRepository _departmentRepository;
 
-        public EmployeesController(IEmployeeRepository  employeeRepository)
+        public EmployeesController(IEmployeeRepository  employeeRepository , IDepartmentRepository departmentRepository)
         {
             _employeeRepository = employeeRepository;
+            _departmentRepository = departmentRepository;
         }
         [HttpGet]
         public IActionResult Index()
@@ -19,7 +21,7 @@ namespace Company.G02.PL.Controllers
 
             //ViewData["Data01"] = "Hello ViewData";
 
-            ViewBag.Data02 = "Hello ViewBag";
+            //ViewBag.Data02 = "Hello ViewBag";
             
             return View(Employees);
         }
@@ -29,6 +31,9 @@ namespace Company.G02.PL.Controllers
 
         public IActionResult Create()
         {
+
+            var departments=_departmentRepository.GetAll();
+            ViewData["departments"] = departments;
             return View();
         }
 
@@ -42,11 +47,11 @@ namespace Company.G02.PL.Controllers
                 var count = _employeeRepository.Add(model);
                 if (count > 0)
                 {
-                    TempData["Created"] = "Employee Is Created";
+                    TempData["Message"] = "Employee Is Created";
                 }
                 else
                 {
-                    TempData["Created"] = "Employee Is Not Created";
+                    TempData["Message"] = "Employee Is Not Created";
                 }
                 return RedirectToAction("Index");
             }
@@ -82,6 +87,8 @@ namespace Company.G02.PL.Controllers
             //if (department is null)
             //{ return NotFound(); }
             //return View(department);
+            var departments = _departmentRepository.GetAll();
+            ViewData["departments"] = departments;
             return Details(id, "edit");
 
         }
@@ -103,9 +110,15 @@ namespace Company.G02.PL.Controllers
                     var Count = _employeeRepository.Update(employee);
                     if (Count > 0)
                     {
-                        return RedirectToAction(nameof(Index));
+                        TempData["Message"] = "Employee Is Updated";
 
                     }
+                    else
+                    {
+                        TempData["Message"] = "Employee Is Updated";
+
+                    }
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
                 {
@@ -127,6 +140,7 @@ namespace Company.G02.PL.Controllers
             //if (department is null)
             //{ return NotFound(); }
             //return View(department);
+
             return Details(id, "Delete");
 
         }
