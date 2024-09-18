@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Company.G02.DAL.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240918073550_AddEmpDeptRelationShip")]
+    [Migration("20240918224337_AddEmpDeptRelationShip")]
     partial class AddEmpDeptRelationShip
     {
         /// <inheritdoc />
@@ -69,9 +69,6 @@ namespace Company.G02.DAL.Data.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
-                    b.Property<int?>("DepartmentId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -98,16 +95,18 @@ namespace Company.G02.DAL.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DepartmentId");
+                    b.HasIndex("WorkForId");
 
                     b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("Company.G02.DAL.Models.Employee", b =>
                 {
-                    b.HasOne("Company.G02.DAL.Models.Department", null)
+                    b.HasOne("Company.G02.DAL.Models.Department", "WorkFor")
                         .WithMany("Employees")
-                        .HasForeignKey("DepartmentId");
+                        .HasForeignKey("WorkForId");
+
+                    b.Navigation("WorkFor");
                 });
 
             modelBuilder.Entity("Company.G02.DAL.Models.Department", b =>

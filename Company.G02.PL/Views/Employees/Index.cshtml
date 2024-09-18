@@ -20,6 +20,20 @@
     </p>
 </div> *@
 
+<form asp-action="Index">
+   <div class="row">
+
+        <div class ="col-8">
+            <input  type="text" name="InputSearch" class="form-control" />
+        </div>        
+        <div class="col-4">
+            <input type="submit" value="search" class="btn btn-outline-info" />
+        </div>
+   </div>
+
+
+</form>
+
 @if (!string.IsNullOrEmpty(TempData["Message"] as string))
 {
 

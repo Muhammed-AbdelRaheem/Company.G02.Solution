@@ -14,15 +14,26 @@ namespace Company.G02.PL.Controllers
             _employeeRepository = employeeRepository;
             _departmentRepository = departmentRepository;
         }
-        [HttpGet]
-        public IActionResult Index()
+
+        public IActionResult Index(string InputSearch)
         {
-            var Employees = _employeeRepository.GetAll();
+            var Employees=Enumerable.Empty<Employee>();
+            if (string.IsNullOrEmpty(InputSearch))
+            {
+             Employees = _employeeRepository.GetAll();
+
+            }
+
+            else
+            {
+                 Employees= _employeeRepository.GetByName(InputSearch);
+            }
+
 
             //ViewData["Data01"] = "Hello ViewData";
 
             //ViewBag.Data02 = "Hello ViewBag";
-            
+             
             return View(Employees);
         }
 
