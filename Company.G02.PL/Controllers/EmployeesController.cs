@@ -16,6 +16,11 @@ namespace Company.G02.PL.Controllers
         public IActionResult Index()
         {
             var Employees = _employeeRepository.GetAll();
+
+            //ViewData["Data01"] = "Hello ViewData";
+
+            ViewBag.Data02 = "Hello ViewBag";
+            
             return View(Employees);
         }
 
@@ -37,8 +42,13 @@ namespace Company.G02.PL.Controllers
                 var count = _employeeRepository.Add(model);
                 if (count > 0)
                 {
-                    return RedirectToAction("Index");
+                    TempData["Created"] = "Employee Is Created";
                 }
+                else
+                {
+                    TempData["Created"] = "Employee Is Not Created";
+                }
+                return RedirectToAction("Index");
             }
             return View(model);
 
