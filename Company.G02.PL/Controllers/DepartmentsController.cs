@@ -7,16 +7,18 @@ namespace Company.G02.PL.Controllers
 {
     public class DepartmentsController : Controller
     {
-        private readonly IDepartmentRepository _departmentRepository;
+        //private readonly IDepartmentRepository _departmentRepository;
+        private readonly IUnitOfwork unitOfwork;
 
-        public DepartmentsController(IDepartmentRepository departmentRepository)
+        public DepartmentsController(/*IDepartmentRepository departmentRepository*/ IUnitOfwork unitOfwork)
         {
-            _departmentRepository = departmentRepository;
+            //_departmentRepository = departmentRepository;
+            this.unitOfwork = unitOfwork;
         }
         [HttpGet]
         public IActionResult Index()
         {
-            var departments = _departmentRepository.GetAll();
+            var departments = unitOfwork.DepartmentRepository.GetAll();
             return View(departments);
         }
 
@@ -35,7 +37,8 @@ namespace Company.G02.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                var count = _departmentRepository.Add(model);
+                 unitOfwork.DepartmentRepository.Add(model);
+                var count = unitOfwork.SaveChange();
                 if (count > 0)
                 {
                     return RedirectToAction("Index");
@@ -50,7 +53,7 @@ namespace Company.G02.PL.Controllers
         {
 
             if (id is null) return BadRequest();
-            var departments = _departmentRepository.Get(id.Value);
+            var departments = unitOfwork.DepartmentRepository.Get(id.Value);
 
             if (departments is null)
             {
@@ -91,7 +94,9 @@ namespace Company.G02.PL.Controllers
 
                 try
                 {
-                 var Count =   _departmentRepository.Update(department);
+                 unitOfwork.DepartmentRepository.Update(department);
+                    var Count = unitOfwork.SaveChange();
+
                     if (Count >0 )
                     {
                     return RedirectToAction(nameof(Index));
@@ -134,7 +139,7 @@ namespace Company.G02.PL.Controllers
 
             try
             {
-                _departmentRepository.Delete(department);
+                unitOfwork.DepartmentRepository.Delete(department);
                 return RedirectToAction(nameof(Index));
 
             }

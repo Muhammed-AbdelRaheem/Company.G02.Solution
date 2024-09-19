@@ -8,38 +8,42 @@ namespace Company.G02.PL.Controllers
 {
     public class EmployeesController : Controller
     {
-        private readonly IEmployeeRepository _employeeRepository;
-        private readonly IDepartmentRepository _departmentRepository;
+        //private readonly IEmployeeRepository _employeeRepository;
+        //private readonly IDepartmentRepository _departmentRepository;
+        private readonly IUnitOfwork _unitOfwork;
         private readonly IMapper _mapper;
 
-        public EmployeesController(IEmployeeRepository  employeeRepository ,
-                                    IDepartmentRepository departmentRepository,
+        public EmployeesController(
+                                    //IEmployeeRepository employeeRepository,
+                                    //IDepartmentRepository departmentRepository,
+                                    IUnitOfwork unitOfwork,
                                     IMapper mapper)
         {
-            _employeeRepository = employeeRepository;
-            _departmentRepository = departmentRepository;
+            _unitOfwork = unitOfwork;
+            //_employeeRepository = employeeRepository;
+            //_departmentRepository = departmentRepository;
             _mapper = mapper;
         }
 
         public IActionResult Index(string InputSearch)
         {
-            var Employees=Enumerable.Empty<Employee>();
+            var employees = Enumerable.Empty<Employee>();
             if (string.IsNullOrEmpty(InputSearch))
             {
-             Employees = _employeeRepository.GetAll();
+                employees = _unitOfwork.EmployeeRepository.GetAll();
 
             }
 
             else
             {
-                 Employees= _employeeRepository.GetByName(InputSearch);
+                employees = _unitOfwork.EmployeeRepository.GetByName(InputSearch);
             }
 
-        var Result=    _mapper.Map<IEnumerable<EmployeeViewModel>>(Employees);
-              //ViewData["Data01"] = "Hello ViewData";
+            var Result = _mapper.Map<IEnumerable<EmployeeViewModel>>(employees);
+            //ViewData["Data01"] = "Hello ViewData";
 
             //ViewBag.Data02 = "Hello ViewBag";
-             
+
             return View(Result);
         }
 
@@ -49,7 +53,7 @@ namespace Company.G02.PL.Controllers
         public IActionResult Create()
         {
 
-            var departments=_departmentRepository.GetAll();
+            var departments= _unitOfwork.DepartmentRepository.GetAll();
             ViewData["departments"] = departments;
             return View();
         }
@@ -57,12 +61,13 @@ namespace Company.G02.PL.Controllers
         [ValidateAntiForgeryToken]
 
         [HttpPost]
-        public IActionResult Create(EmployeeViewModel model)
+        public IActionResult Create(Employee model)
         {
             if (ModelState.IsValid)
             {
-              var Employee = _mapper.Map<Employee>(model);
-                var count = _employeeRepository.Add(Employee);
+              //var Employee = _mapper.Map<Employee>(model);
+                 _unitOfwork.EmployeeRepository.Add(model);
+                var count = _unitOfwork.SaveChange();
                 if (count > 0)
                 {
                     TempData["Message"] = "Employee Is Created";
@@ -82,7 +87,7 @@ namespace Company.G02.PL.Controllers
         {
 
             if (id is null) return BadRequest();
-            var Employee = _employeeRepository.Get(id.Value);
+            var Employee = _unitOfwork.EmployeeRepository.Get(id.Value);
 
             if (Employee is null)
             {
@@ -107,7 +112,7 @@ namespace Company.G02.PL.Controllers
             //if (department is null)
             //{ return NotFound(); }
             //return View(department);
-            var departments = _departmentRepository.GetAll();
+            var departments = _unitOfwork.DepartmentRepository.GetAll();
             ViewData["departments"] = departments;
 
             return Details(id, "edit");
@@ -130,7 +135,8 @@ namespace Company.G02.PL.Controllers
                 {
                     //var employee = _mapper.Map<Employee>(model);
 
-                    var Count = _employeeRepository.Update(model);
+                     _unitOfwork.EmployeeRepository.Update(model);
+                    var Count = _unitOfwork.SaveChange();
                     if (Count > 0)
                     {
                         TempData["Message"] = "Employee Is Updated";
@@ -183,7 +189,7 @@ namespace Company.G02.PL.Controllers
             {
                 //var employee = _mapper.Map<Employee>(model);
 
-                _employeeRepository.Delete(model);
+                _unitOfwork.EmployeeRepository.Delete(model);
                 return RedirectToAction(nameof(Index));
 
             }
