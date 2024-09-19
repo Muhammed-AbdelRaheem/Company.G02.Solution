@@ -1,6 +1,7 @@
 using Company.G02.BLL.Interfaces;
 using Company.G02.BLL.Repositories;
 using Company.G02.DAL.Data.Contexts;
+using Company.G02.PL.Mapping.Employees;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -22,7 +23,7 @@ namespace Company.G02.PL
             builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>();
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
-
+            builder.Services.AddAutoMapper(typeof(EmployeeProfile));
 
             var app = builder.Build();
 

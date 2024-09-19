@@ -1,5 +1,7 @@
-﻿using Company.G02.BLL.Interfaces;
+﻿using AutoMapper;
+using Company.G02.BLL.Interfaces;
 using Company.G02.DAL.Models;
+using Company.G02.PL.ViewModels.Employees;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Company.G02.PL.Controllers
@@ -8,11 +10,15 @@ namespace Company.G02.PL.Controllers
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IDepartmentRepository _departmentRepository;
+        private readonly IMapper _mapper;
 
-        public EmployeesController(IEmployeeRepository  employeeRepository , IDepartmentRepository departmentRepository)
+        public EmployeesController(IEmployeeRepository  employeeRepository ,
+                                    IDepartmentRepository departmentRepository,
+                                    IMapper mapper)
         {
             _employeeRepository = employeeRepository;
             _departmentRepository = departmentRepository;
+            _mapper = mapper;
         }
 
         public IActionResult Index(string InputSearch)
@@ -29,12 +35,12 @@ namespace Company.G02.PL.Controllers
                  Employees= _employeeRepository.GetByName(InputSearch);
             }
 
-
-            //ViewData["Data01"] = "Hello ViewData";
+        var Result=    _mapper.Map<IEnumerable<EmployeeViewModel>>(Employees);
+              //ViewData["Data01"] = "Hello ViewData";
 
             //ViewBag.Data02 = "Hello ViewBag";
              
-            return View(Employees);
+            return View(Result);
         }
 
 
@@ -51,11 +57,12 @@ namespace Company.G02.PL.Controllers
         [ValidateAntiForgeryToken]
 
         [HttpPost]
-        public IActionResult Create(Employee model)
+        public IActionResult Create(EmployeeViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var count = _employeeRepository.Add(model);
+              var Employee = _mapper.Map<Employee>(model);
+                var count = _employeeRepository.Add(Employee);
                 if (count > 0)
                 {
                     TempData["Message"] = "Employee Is Created";
@@ -81,6 +88,8 @@ namespace Company.G02.PL.Controllers
             {
                 return NotFound();
             }
+          //var employee=  _mapper.Map<EmployeeViewModel>(Employee);
+
             return View(Employee);
 
         }
@@ -100,16 +109,17 @@ namespace Company.G02.PL.Controllers
             //return View(department);
             var departments = _departmentRepository.GetAll();
             ViewData["departments"] = departments;
+
             return Details(id, "edit");
 
         }
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public IActionResult Edit(Employee employee, [FromRoute] int id)
+        public IActionResult Edit(Employee model, [FromRoute] int id)
         {
 
-            if (employee.Id != id)
+            if (model.Id != id)
             {
                 return BadRequest();
             }
@@ -118,13 +128,15 @@ namespace Company.G02.PL.Controllers
 
                 try
                 {
-                    var Count = _employeeRepository.Update(employee);
+                    //var employee = _mapper.Map<Employee>(model);
+
+                    var Count = _employeeRepository.Update(model);
                     if (Count > 0)
                     {
                         TempData["Message"] = "Employee Is Updated";
 
                     }
-                    else
+                    else 
                     {
                         TempData["Message"] = "Employee Is Updated";
 
@@ -136,7 +148,8 @@ namespace Company.G02.PL.Controllers
                     ModelState.AddModelError(string.Empty, ex.Message);
                 }
             }
-            return View(employee);
+
+            return View(model);
         }
 
 
@@ -159,16 +172,18 @@ namespace Company.G02.PL.Controllers
         [ValidateAntiForgeryToken]
 
         [HttpPost]
-        public IActionResult Delete(Employee employee, [FromRoute] int id)
+        public IActionResult Delete(Employee model, [FromRoute] int id)
         {
-            if ((id != employee.Id))
+            if ((id != model.Id))
             {
                 return BadRequest();
             }
 
             try
             {
-                _employeeRepository.Delete(employee);
+                //var employee = _mapper.Map<Employee>(model);
+
+                _employeeRepository.Delete(model);
                 return RedirectToAction(nameof(Index));
 
             }
@@ -177,7 +192,7 @@ namespace Company.G02.PL.Controllers
                 ModelState.AddModelError(string.Empty, ex.Message);
             }
 
-            return View(employee);
+            return View(model);
         }
     }
 }
