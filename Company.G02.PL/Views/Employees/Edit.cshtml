@@ -1,4 +1,4 @@
-﻿@model Employee
+﻿@model EmployeeViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -6,15 +6,15 @@
 
 <h1>Edit Employee</h1>
 
-<form asp-action="Edit">
+<form asp-action="Edit" enctype="multipart/form-data">
 
     <partial name="PartialViews/CreateEditeEmployeeView" />
 
     
     <input type="submit" value="Save" class="btn btn-primary" />
     <a asp-controller="Employees" asp-action="Index" class="btn btn-light">Back To List</a>
+<input asp-for="ImageName" hidden/>
 </form>
-
 
 @section Validation {
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>

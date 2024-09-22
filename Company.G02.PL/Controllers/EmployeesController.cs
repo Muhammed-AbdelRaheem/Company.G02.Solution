@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Company.G02.BLL.Interfaces;
 using Company.G02.DAL.Models;
+using Company.G02.PL.Helper;
 using Company.G02.PL.ViewModels.Employees;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,9 +20,9 @@ namespace Company.G02.PL.Controllers
                                     IUnitOfwork unitOfwork,
                                     IMapper mapper)
         {
-            _unitOfwork = unitOfwork;
             //_employeeRepository = employeeRepository;
             //_departmentRepository = departmentRepository;
+            _unitOfwork = unitOfwork;
             _mapper = mapper;
         }
 
@@ -53,7 +54,7 @@ namespace Company.G02.PL.Controllers
         public IActionResult Create()
         {
 
-            var departments= _unitOfwork.DepartmentRepository.GetAll();
+            var departments = _unitOfwork.DepartmentRepository.GetAll();
             ViewData["departments"] = departments;
             return View();
         }
@@ -61,12 +62,15 @@ namespace Company.G02.PL.Controllers
         [ValidateAntiForgeryToken]
 
         [HttpPost]
-        public IActionResult Create(Employee model)
+        public IActionResult Create(EmployeeViewModel model)
         {
             if (ModelState.IsValid)
             {
-              //var Employee = _mapper.Map<Employee>(model);
-                 _unitOfwork.EmployeeRepository.Add(model);
+                model.ImageName = DecumentSettings.UplodeFile(model.Image, "Images");
+                //var Employee = _mapper.Map<Employee>(model);
+
+                var employee = _mapper.Map<Employee>(model);
+                _unitOfwork.EmployeeRepository.Add(employee);
                 var count = _unitOfwork.SaveChange();
                 if (count > 0)
                 {
@@ -87,15 +91,16 @@ namespace Company.G02.PL.Controllers
         {
 
             if (id is null) return BadRequest();
-            var Employee = _unitOfwork.EmployeeRepository.Get(id.Value);
+            var employee = _unitOfwork.EmployeeRepository.Get(id.Value);
 
-            if (Employee is null)
+            if (employee is null)
             {
                 return NotFound();
             }
-          //var employee=  _mapper.Map<EmployeeViewModel>(Employee);
 
-            return View(Employee);
+            var employeeViewModel = _mapper.Map<EmployeeViewModel>(employee);
+
+            return View(employeeViewModel);
 
         }
 
@@ -115,13 +120,19 @@ namespace Company.G02.PL.Controllers
             var departments = _unitOfwork.DepartmentRepository.GetAll();
             ViewData["departments"] = departments;
 
+            if (id is null) { return BadRequest(); }
+            var employees = _unitOfwork.EmployeeRepository.Get(id.Value);
+            if (employees is null) { return NotFound(); }
+            var employeeViewModel = _mapper.Map<EmployeeViewModel>(employees);
+
+
             return Details(id, "edit");
 
         }
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public IActionResult Edit(Employee model, [FromRoute] int id)
+        public IActionResult Edit(EmployeeViewModel model, [FromRoute] int id)
         {
 
             if (model.Id != id)
@@ -131,18 +142,27 @@ namespace Company.G02.PL.Controllers
             if (ModelState.IsValid)
             {
 
+               
+
                 try
                 {
-                    //var employee = _mapper.Map<Employee>(model);
 
-                     _unitOfwork.EmployeeRepository.Update(model);
+                    if (model.ImageName is not null)
+                    {
+                        DecumentSettings.DeleteFile(model.ImageName, "Images");
+                    }
+                 model.ImageName=   DecumentSettings.UplodeFile(model.Image, "Images");
+
+                    var employee = _mapper.Map<Employee>(model);
+
+                    _unitOfwork.EmployeeRepository.Update(employee);
                     var Count = _unitOfwork.SaveChange();
                     if (Count > 0)
                     {
                         TempData["Message"] = "Employee Is Updated";
 
                     }
-                    else 
+                    else
                     {
                         TempData["Message"] = "Employee Is Updated";
 
@@ -161,36 +181,53 @@ namespace Company.G02.PL.Controllers
 
         public IActionResult Delete(int? id)
         {
-            //if (id is null)
-            //{
-            //    return BadRequest();
-            //}
-
-            //var department = _departmentRepository.Get(id.Value);
-            //if (department is null)
-            //{ return NotFound(); }
-            //return View(department);
-
-            return Details(id, "Delete");
-
-        }
-
-        [ValidateAntiForgeryToken]
-
-        [HttpPost]
-        public IActionResult Delete(Employee model, [FromRoute] int id)
-        {
-            if ((id != model.Id))
+            if (id is null)
             {
                 return BadRequest();
             }
 
+            var employee = _unitOfwork.EmployeeRepository.Get(id.Value);
+            if (employee is null)
+            { return NotFound(); }
+
+
+            var employeeViewModel = _mapper.Map<EmployeeViewModel>(employee);
+
+            return View(employeeViewModel);
+
+
+        }
+
+
+
+        [ValidateAntiForgeryToken]
+
+        [HttpPost]
+        public IActionResult Delete(EmployeeViewModel model, [FromRoute] int id)
+        {
+
             try
             {
-                //var employee = _mapper.Map<Employee>(model);
+                if ((id != model.Id))
+                {
+                    return BadRequest();
+                }
 
-                _unitOfwork.EmployeeRepository.Delete(model);
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+
+                    var employee = _mapper.Map<Employee>(model);
+
+                    _unitOfwork.EmployeeRepository.Delete(employee);
+                    var Count = _unitOfwork.SaveChange();
+
+
+                    if (Count > 0)
+                    {
+                        DecumentSettings.DeleteFile(model.ImageName, "Images");
+                        return RedirectToAction(nameof(Index)); }
+
+                }
 
             }
             catch (Exception ex)

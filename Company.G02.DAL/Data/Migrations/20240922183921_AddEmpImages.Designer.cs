@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Company.G02.DAL.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240918224337_AddEmpDeptRelationShip")]
-    partial class AddEmpDeptRelationShip
+    [Migration("20240922183921_AddEmpImages")]
+    partial class AddEmpImages
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -75,6 +75,9 @@ namespace Company.G02.DAL.Data.Migrations
 
                     b.Property<DateTime>("HiringDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("ImageName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");

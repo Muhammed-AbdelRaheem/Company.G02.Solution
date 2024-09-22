@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,8 @@ namespace Company.G02.DAL.Models
 
         public string Code { get; set; }
 
+        [DisplayName("DepartmentName")]        
+        
         public string Name { get; set; }
 
         public DateTime DateOfCreation { get; set; }
