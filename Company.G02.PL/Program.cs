@@ -30,7 +30,10 @@ namespace Company.G02.PL
 
 			builder.Services.AddAutoMapper(typeof(EmployeeProfile));
 
-			builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
+			builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+			builder.Services.ConfigureApplicationCookie(config => config.LoginPath = "/Account/SignIn");
+
+
 
 			var app = builder.Build();
 
@@ -47,6 +50,7 @@ namespace Company.G02.PL
 
 			app.UseRouting();
 
+			app.UseAuthentication();
 			app.UseAuthorization();
 
 			app.MapControllerRoute(

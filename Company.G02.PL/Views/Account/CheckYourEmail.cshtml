@@ -1,0 +1,29 @@
+﻿@model ForgetPasswordViewModel
+@{
+    ViewData["Title"] = "ForgetPassword";
+	Layout = "~/Views/Shared/_AuthForgetPasswordLayout.cshtml";
+}
+
+
+
+
+
+<div class="main-agileinfo">
+
+	<div class="agileits-top">
+
+		<div class="text-center" asp-validation-summary="All"></div>
+
+		<form asp-action="">
+
+			<div>
+				<p>Reset Password Link Has Been Sent To Your Email , Please Check Your Email</p>
+			</div>
+			<div>
+				<a href="https://mail.google.com/" target="_blank">Your Inbox</a>
+			</div>
+
+		</form>
+	</div>
+</div>
+

@@ -3,11 +3,13 @@ using Company.G02.BLL.Interfaces;
 using Company.G02.DAL.Models;
 using Company.G02.PL.Helper;
 using Company.G02.PL.ViewModels.Employees;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Company.G02.PL.Controllers
 {
-    public class EmployeesController : Controller
+	[Authorize]
+	public class EmployeesController : Controller
     {
         //private readonly IEmployeeRepository _employeeRepository;
         //private readonly IDepartmentRepository _departmentRepository;

@@ -1,10 +1,12 @@
 ﻿using Company.G02.BLL.Interfaces;
 using Company.G02.BLL.Repositories;
 using Company.G02.DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Company.G02.PL.Controllers
 {
+    [Authorize]
     public class DepartmentsController : Controller
     {
         //private readonly IDepartmentRepository _departmentRepository;

@@ -1,4 +1,5 @@
 ﻿using Company.G02.DAL.Models;
+using Company.G02.PL.Helper;
 using Company.G02.PL.ViewModels.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,10 +9,13 @@ namespace Company.G02.PL.Controllers
 	public class AccountController : Controller
 	{
 		private readonly UserManager<ApplicationUser> _manager;
+		private readonly SignInManager<ApplicationUser> _signInManager;
 
-		public AccountController(UserManager<ApplicationUser> manager)
+		public AccountController(UserManager<ApplicationUser> manager, SignInManager<ApplicationUser> SignInManager
+								)
 		{
 			_manager = manager;
+			_signInManager = SignInManager;
 		}
 
 
@@ -93,6 +97,8 @@ namespace Company.G02.PL.Controllers
 
 		#endregion
 
+
+
 		#region SignIn
 
 		[HttpGet]
@@ -117,7 +123,13 @@ namespace Company.G02.PL.Controllers
 						if (password)
 						{
 
-							return RedirectToAction(nameof(Index), "Home");
+							var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
+
+							if (result.Succeeded)
+							{
+								return RedirectToAction(nameof(Index), "Home");
+
+							}
 
 						}
 
@@ -137,11 +149,11 @@ namespace Company.G02.PL.Controllers
 				catch (Exception ex)
 				{
 
-					ModelState.AddModelError (string.Empty, ex.Message);
-					
+					ModelState.AddModelError(string.Empty, ex.Message);
+
 				}
 			}
-		
+
 
 
 			return View(model);
@@ -151,6 +163,128 @@ namespace Company.G02.PL.Controllers
 
 
 		#endregion
+
+
+
+		#region SignOut
+
+		public new async Task<IActionResult> SignOut()
+		{
+			await _signInManager.SignOutAsync();
+			return RedirectToAction(nameof(SignIn));
+		}
+
+
+
+		#endregion
+
+
+
+		#region Reset Password
+
+
+
+		[HttpGet]
+		public IActionResult ForgetPassword()
+		{
+			return View();
+		}
+
+
+
+
+		[HttpPost]
+
+		public async Task<IActionResult> SendResetPassword(ForgetPasswordViewModel model)
+		{
+			if (ModelState.IsValid)
+			{
+				var user = await _manager.FindByEmailAsync(model.Email);
+				if (user is not null)
+				{
+					var token = await _manager.GeneratePasswordResetTokenAsync(user);
+
+					var url = Url.Action("ResetPassword", "Account", new { email = model.Email, token }, Request.Scheme);
+
+					var email = new Email
+					{
+						To = model.Email,
+						Subject = "Reset Password",
+						Body = url
+
+					};
+
+					EmailSettings.SendEmail(email);
+					////////////////////// Send Email here
+
+					return RedirectToAction(nameof(CheckYourEmail));
+
+				}
+				else { ModelState.AddModelError(string.Empty, "invalid Operation , Try Again !!"); }
+
+			}
+
+
+			return View("ForgetPassword", model);
+
+		}
+
+
+		[HttpGet]
+		public IActionResult CheckYourEmail()
+		{
+			return View();
+		}
+
+
+
+
+		[HttpGet]
+		public IActionResult ResetPassword(string email, string token)
+		{
+			TempData["email"] = email;
+			TempData["token"] = token;
+
+
+
+			return View();
+		}
+
+
+		[HttpPost]
+		public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+		{
+
+			if (ModelState.IsValid)
+			{
+
+				var email = TempData["email"] as string;
+				var token = TempData["token"] as string;
+
+				var user = await _manager.FindByEmailAsync(email);
+
+				if (user is not null)
+				{
+					var result = await _manager.ResetPasswordAsync(user, token, model.Password);
+
+					if (result.Succeeded)
+					{
+						return RedirectToAction(nameof(SignIn));
+					}
+				}
+
+
+				ModelState.AddModelError(string.Empty, "invalid Operation , Try Again !!");
+			}
+
+
+
+			return View(model);
+		}
+
+
+		#endregion
+
 
 
 	}
