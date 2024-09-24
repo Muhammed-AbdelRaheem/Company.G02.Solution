@@ -48,17 +48,13 @@
 
 
 
-
-
-
-
-
-
 @if (Model.Count() > 0)
 {
     <table class="table table-striped table-hover">
         <thead>
             <tr>
+
+                <th>@Html.DisplayNameFor(E => E.Image)</th>
                 <th>@Html.DisplayNameFor(E => E.Name)</th>
                 <th>@Html.DisplayNameFor(E => E.WorkFor.Name)</th>
                 <th>@Html.DisplayNameFor(E => E.Age)</th>
@@ -73,12 +69,16 @@
                 <th>Delete</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody >
             @foreach (var employee in Model)
             {
-                <tr>
+                <tr class="text-center">
+                    <td>
+                        <img src="~/files/images/@employee.ImageName" width="75" class="img-fluid rounded-circle">
+                    </td>
+
                     <td>@employee.Name</td>
-                    <td>@employee.WorkFor?.Name</td>
+                    <td >@employee.WorkFor?.Name</td>
                     <td>@employee.Age</td>
                     <td>@employee.Address</td>
                     <td>@Html.DisplayFor(E => employee.Email)</td>

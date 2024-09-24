@@ -11,6 +11,6 @@ namespace Company.G02.BLL.Interfaces
         public IDepartmentRepository DepartmentRepository { get; }
         public IEmployeeRepository EmployeeRepository { get; }
 
-        int SaveChange();
+        Task<int> SaveChangeAsync();
     }
 }

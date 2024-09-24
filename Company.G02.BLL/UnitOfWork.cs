@@ -24,9 +24,9 @@ namespace Company.G02.BLL
 
         public IEmployeeRepository EmployeeRepository => _employeeRepository;
 
-        public int SaveChange()
+        public async Task<int> SaveChangeAsync()
         {
-            return _context.SaveChanges();
+            return await _context.SaveChangesAsync();
         }
     }
 }
