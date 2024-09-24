@@ -20,21 +20,15 @@ namespace Company.G02.DAL.Data.Contexts
         {
 
         }
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-
-        //    optionsBuilder.UseSqlServer("Server= . ; DataBase =  CompanyG02 ; Trusted_Connection =true;TrustServerCertificate=true");
-
-        //}
-
+       
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
             //modelBuilder.ApplyConfiguration(new DepartmentConfiguration());
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-            base.OnModelCreating(modelBuilder);
 
+            base.OnModelCreating(modelBuilder);
 
         }
         public DbSet<Department> Departments { get; set; }
