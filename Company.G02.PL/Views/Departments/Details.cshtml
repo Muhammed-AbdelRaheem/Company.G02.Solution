@@ -4,16 +4,17 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Details Of @Model.Name</h1>
 
 <div>
     
 
 <partial name="PartialVIews/DeleteDetailsDepartmentPartialView" />
-    <br />
-    <br />
-    <a asp-controller="Departments" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
-    <a asp-controller="Departments" asp-action="Index" class="btn btn-light">Back To List</a>
+   
+   <div class="mt-3">
+        <a asp-controller="Departments" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+        <a asp-controller="Departments" asp-action="Index" class="btn btn-light">Back To List</a>
+   </div>
 </div>
 
 

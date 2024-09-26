@@ -11,14 +11,10 @@ namespace Company.G02.PL.Controllers
 	[Authorize]
 	public class EmployeesController : Controller
     {
-        //private readonly IEmployeeRepository _employeeRepository;
-        //private readonly IDepartmentRepository _departmentRepository;
         private readonly IUnitOfwork _unitOfwork;
         private readonly IMapper _mapper;
 
         public EmployeesController(
-                                    //IEmployeeRepository employeeRepository,
-                                    //IDepartmentRepository departmentRepository,
                                     IUnitOfwork unitOfwork,
                                     IMapper mapper)
         {
@@ -43,9 +39,7 @@ namespace Company.G02.PL.Controllers
             }
 
             var Result = _mapper.Map<IEnumerable<EmployeeViewModel>>(employees);
-            //ViewData["Data01"] = "Hello ViewData";
-
-            //ViewBag.Data02 = "Hello ViewBag";
+   
 
             return View(Result);
         }

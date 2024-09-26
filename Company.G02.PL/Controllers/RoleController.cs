@@ -2,6 +2,7 @@
 using Company.G02.DAL.Models;
 using Company.G02.PL.ViewModels;
 using Company.G02.PL.ViewModels.Roles;
+using Company.G02.PL.ViewModels.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -40,12 +41,19 @@ namespace Company.G02.PL.Controllers
             else
             {
 
-                var Role = await _roleManager.FindByNameAsync(InputSearch);
+                //var Role = await _roleManager.FindByNameAsync(InputSearch);
 
-                var MappedRole = _mapper.Map<IdentityRole, RoleViewModel>(Role);
+                //var MappedRole = _mapper.Map<IdentityRole, RoleViewModel>(Role);
+              var  Roles = await _roleManager.Roles.Where(R => R.Name.
+                                    ToLower().
+                                    Contains(InputSearch.ToLower())).
+                        Select(R => new RoleViewModel()
+                        {
+                            Id = R.Id,
+                            RoleName = R.Name
+                        }).ToListAsync();
 
-
-                return View(new List<RoleViewModel>() { MappedRole });
+                return View( Roles );
 
             }
 

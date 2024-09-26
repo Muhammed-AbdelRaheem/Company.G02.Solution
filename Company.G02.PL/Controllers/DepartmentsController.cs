@@ -1,6 +1,9 @@
-﻿using Company.G02.BLL.Interfaces;
+﻿using AutoMapper;
+using Company.G02.BLL.Interfaces;
 using Company.G02.BLL.Repositories;
 using Company.G02.DAL.Models;
+using Company.G02.PL.ViewModels.Departments;
+using Company.G02.PL.ViewModels.Employees;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,13 +12,13 @@ namespace Company.G02.PL.Controllers
     [Authorize]
     public class DepartmentsController : Controller
     {
-        //private readonly IDepartmentRepository _departmentRepository;
         private readonly IUnitOfwork unitOfwork;
+        private readonly IMapper _mapper;
 
-        public DepartmentsController(/*IDepartmentRepository departmentRepository*/ IUnitOfwork unitOfwork)
+        public DepartmentsController(IUnitOfwork unitOfwork,IMapper mapper)
         {
-            //_departmentRepository = departmentRepository;
             this.unitOfwork = unitOfwork;
+            _mapper = mapper;
         }
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -35,11 +38,13 @@ namespace Company.G02.PL.Controllers
         [ValidateAntiForgeryToken]
 
         [HttpPost]
-        public async Task<IActionResult> Create(Department model)
+        public async Task<IActionResult> Create(DepartmentViewModel model)
         {
             if (ModelState.IsValid)
             {
-                 unitOfwork.DepartmentRepository.Add(model);
+                var department = _mapper.Map<Department>(model);
+
+                unitOfwork.DepartmentRepository.Add(department);
                 var count =await unitOfwork.SaveChangeAsync();
                 if (count > 0)
                 {
@@ -61,6 +66,8 @@ namespace Company.G02.PL.Controllers
             {
                 return NotFound();
             }
+            var departmentViewModel = _mapper.Map<DepartmentViewModel>(departments);
+
             return View(departments);
 
         }
@@ -92,10 +99,10 @@ namespace Company.G02.PL.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<IActionResult> Edit(Department department, [FromRoute] int id)
+        public async Task<IActionResult> Edit(DepartmentViewModel model, [FromRoute] int id)
         {
 
-            if (department.Id !=id)
+            if (model.Id !=id)
             {
                 return BadRequest();
             }
@@ -104,7 +111,8 @@ namespace Company.G02.PL.Controllers
 
                 try
                 {
-                 unitOfwork.DepartmentRepository.Update(department);
+                    var departments = _mapper.Map<Department>(model);
+                     unitOfwork.DepartmentRepository.Update(departments);
                     var Count =await unitOfwork.SaveChangeAsync();
 
                     if (Count >0 )
@@ -119,7 +127,7 @@ namespace Company.G02.PL.Controllers
                     return RedirectToAction("Error", "Home");
                 }
             }
-            return View(department);
+            return View(model);
         }
 
 
@@ -149,16 +157,18 @@ namespace Company.G02.PL.Controllers
         [ValidateAntiForgeryToken]
 
         [HttpPost]
-        public async Task<IActionResult> Delete(Department department, [FromRoute] int id)
+        public async Task<IActionResult> Delete(DepartmentViewModel model, [FromRoute] int id)
         {
-            if ((id != department.Id))
+            if ((id != model.Id))
             {
                 return BadRequest();
             }
 
             try
             {
-                unitOfwork.DepartmentRepository.Delete(department);
+                var departments = _mapper.Map<Department>(model);
+
+                unitOfwork.DepartmentRepository.Delete(departments);
                 var Count = await unitOfwork.SaveChangeAsync();
 
                 return RedirectToAction(nameof(Index));
@@ -169,7 +179,7 @@ namespace Company.G02.PL.Controllers
                 ModelState.AddModelError(string.Empty, ex.Message);
             }
 
-            return View(department);
+            return View(model);
         }
 
     }
