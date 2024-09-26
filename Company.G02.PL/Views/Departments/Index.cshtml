@@ -14,7 +14,7 @@
 {
     <table class="table table-striped table-hover">
         <thead>
-            <tr>
+            <tr class="text-center">
                 <th>@Html.DisplayNameFor(D => D.Code)</th>
                 <th>@Html.DisplayNameFor(D => D.Name)</th>
                 <th>@Html.DisplayNameFor(D => D.DateOfCreation)</th>
@@ -26,12 +26,12 @@
         <tbody>
             @foreach (var department in Model)
             {
-                <tr>
+                <tr class="text-center">
                     <td>@department.Code</td>
                     <td>@department.Name</td>
                     <td>@department.DateOfCreation</td>
 
-                    <partial name="_BtnPartialView" Model="@department.Id" />
+                    <partial name="_BtnPartialView" Model="@department.Id.ToString()" />
 
                 </tr>
             }

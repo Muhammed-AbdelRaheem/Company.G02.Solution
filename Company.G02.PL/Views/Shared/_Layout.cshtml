@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Company.G02.PL.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
     <header>
@@ -33,6 +34,20 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav ">
+
+                    @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item me-2">
+                                <a class="nav-link text-dark btn btn-light" asp-area="" asp-controller="role" asp-action="Index">Roles</a>
+                            </li>
+
+                            <li class="nav-item me-2">
+                                <a class="nav-link text-dark btn btn-light" asp-area="" asp-controller="user" asp-action="Index">Users</a>
+                            </li>
+                        }
+                          
+                        
+
                         <li class="nav-item">
                             <a class="nav-link text-dark btn btn-danger" asp-area="" asp-controller="Account" asp-action="SignOut">SignOut</a>
                         </li>
