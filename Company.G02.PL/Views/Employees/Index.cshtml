@@ -52,7 +52,7 @@
 {
     <table class="table table-striped table-hover">
         <thead>
-            <tr>
+            <tr class="text-center">
 
                 <th>@Html.DisplayNameFor(E => E.Image)</th>
                 <th>@Html.DisplayNameFor(E => E.Name)</th>
@@ -87,7 +87,7 @@
                     <td>@Html.DisplayFor(E => employee.IsActive)</td>
                     <td>@employee.HiringDate</td>
 
-                    <partial name="_BtnPartialView" Model="@employee.Id" />
+                    <partial name="_BtnPartialView" Model="@employee.Id.ToString()" />
                 </tr>
             }
         </tbody>

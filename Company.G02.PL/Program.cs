@@ -4,6 +4,8 @@ using Company.G02.BLL.Repositories;
 using Company.G02.DAL.Data.Contexts;
 using Company.G02.DAL.Models;
 using Company.G02.PL.Mapping.Employees;
+using Company.G02.PL.Mapping.Roles;
+using Company.G02.PL.Mapping.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -21,17 +23,17 @@ namespace Company.G02.PL
 
 			//builder.Services.AddScoped<AppDbContext>();
 			builder.Services.AddDbContext<AppDbContext>(
-								//options => options.UseSqlServer("Server= . ; DataBase =  CompanyG02 ; Trusted_Connection =true;TrustServerCertificate=true"));
 								options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefalutConnection")));
 			builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-			//builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+
 			builder.Services.AddScoped<IUnitOfwork, UnitOfWork>();
 
 
-			builder.Services.AddAutoMapper(typeof(EmployeeProfile));
+			builder.Services.AddAutoMapper(typeof(EmployeeProfile),typeof(UserProfile),typeof(RoleProfile));
 
 			builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
-			builder.Services.ConfigureApplicationCookie(config => config.LoginPath = "/Account/SignIn");
+
+			builder.Services.ConfigureApplicationCookie(config => { config.LoginPath = "/Account/SignIn"; config.AccessDeniedPath = "/Account/AccessDenied"; });
 
 
 

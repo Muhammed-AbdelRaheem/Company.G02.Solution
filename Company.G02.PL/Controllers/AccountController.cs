@@ -6,286 +6,303 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Company.G02.PL.Controllers
 {
-	public class AccountController : Controller
-	{
-		private readonly UserManager<ApplicationUser> _manager;
-		private readonly SignInManager<ApplicationUser> _signInManager;
-
-		public AccountController(UserManager<ApplicationUser> manager, SignInManager<ApplicationUser> SignInManager
-								)
-		{
-			_manager = manager;
-			_signInManager = SignInManager;
-		}
-
-
-		#region SignUp
-
-
-		[HttpGet]
-		public IActionResult SignUp()
-		{
-			return View();
-		}
-
-
-		[HttpPost]
-		public async Task<IActionResult> SignUp(SignUpViewModel model)
-		{
-			if (ModelState.IsValid)
-			{
-				try
-				{
-					var user = await _manager.FindByNameAsync(model.UserName);
-
-					if (user is null)
-					{
-						user = await _manager.FindByEmailAsync(model.Email);
-
-						if (user is null)
-						{
-							user = new ApplicationUser()
-							{
-								UserName = model.UserName,
-								Firstname = model.FirstName,
-								Lastname = model.LastName,
-								Email = model.Email,
-								IsAgree = model.IsAgree
-							};
-
-
-							var Result = await _manager.CreateAsync(user, model.Password);
+    public class AccountController : Controller
+    {
+        private readonly UserManager<ApplicationUser> _manager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+
+        public AccountController(UserManager<ApplicationUser> manager, SignInManager<ApplicationUser> SignInManager)
+        {
+            _manager = manager;
+            _signInManager = SignInManager;
+        }
+
+
+        #region SignUp
+
+
+        [HttpGet]
+        public IActionResult SignUp()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> SignUp(SignUpViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var user = await _manager.FindByNameAsync(model.UserName);
+
+                    if (user is null)
+                    {
+                        user = await _manager.FindByEmailAsync(model.Email);
+
+                        if (user is null)
+                        {
+                            user = new ApplicationUser()
+                            {
+                                UserName = model.UserName,
+                                Firstname = model.FirstName,
+                                Lastname = model.LastName,
+                                Email = model.Email,
+                                IsAgree = model.IsAgree
+                            };
+
+
+                            var Result = await _manager.CreateAsync(user, model.Password);
 
-							if (Result.Succeeded)
-							{
-								return RedirectToAction(nameof(SignIn));
-							}
-							else
-							{
-								foreach (var Error in Result.Errors)
-								{
-									ModelState.AddModelError(string.Empty, Error.Description);
-								}
-							}
-						}
+                            if (Result.Succeeded)
+                            {
+                                return RedirectToAction(nameof(SignIn));
+                            }
+                            else
+                            {
+                                foreach (var Error in Result.Errors)
+                                {
+                                    ModelState.AddModelError(string.Empty, Error.Description);
+                                }
+                            }
+                        }
 
-						else
-						{
-							ModelState.AddModelError(string.Empty, "Email Is Already Exits !!");
-						}
-						return View();
+                        else
+                        {
+                            ModelState.AddModelError(string.Empty, "Email Is Already Exits !!");
+                        }
+                        return View();
 
-					}
+                    }
 
-					else
-					{
-						ModelState.AddModelError(string.Empty, "UserName Is Already Exits !!");
-					}
-				}
-				catch (Exception ex)
-				{
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "UserName Is Already Exits !!");
+                    }
+                }
+                catch (Exception ex)
+                {
 
-					ModelState.AddModelError(string.Empty, ex.Message);
-					;
-				}
-			}
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                    ;
+                }
+            }
 
 
-			return View();
-		}
+            return View();
+        }
 
 
-		#endregion
+        #endregion
 
 
 
-		#region SignIn
+        #region SignIn
 
-		[HttpGet]
-		public IActionResult SignIn()
-		{
-			return View();
-		}
+        [HttpGet]
+        public IActionResult SignIn()
+        {
+            return View();
+        }
 
-		[HttpPost]
-		public async Task<IActionResult> SignIn(SingInViewModel model)
-		{
-			if (ModelState.IsValid)
-			{
-				try
-				{
-					var user = await _manager.FindByEmailAsync(model.Email);
+        [HttpPost]
+        public async Task<IActionResult> SignIn(SingInViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var user = await _manager.FindByEmailAsync(model.Email);
 
-					if (user is not null)
-					{
-						var password = await _manager.CheckPasswordAsync(user, model.Password);
+                    if (user is not null)
+                    {
+                        var password = await _manager.CheckPasswordAsync(user, model.Password);
 
-						if (password)
-						{
+                        if (password)
+                        {
 
-							var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
+                            var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
 
-							if (result.Succeeded)
-							{
-								return RedirectToAction(nameof(Index), "Home");
+                            if (result.Succeeded)
+                            {
+                                return RedirectToAction(nameof(Index), "Home");
 
-							}
+                            }
 
-						}
+                        }
 
-						else
-						{
-							ModelState.AddModelError(string.Empty, "Invalid Login !!");
-						}
-						return View(model);
+                        else
+                        {
+                            ModelState.AddModelError(string.Empty, "Invalid Login !!");
+                        }
+                        return View(model);
 
-					}
-					else
-					{
-						ModelState.AddModelError(string.Empty, "Invalid Login !!");
-					}
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Invalid Login !!");
+                    }
 
-				}
-				catch (Exception ex)
-				{
+                }
+                catch (Exception ex)
+                {
 
-					ModelState.AddModelError(string.Empty, ex.Message);
+                    ModelState.AddModelError(string.Empty, ex.Message);
 
-				}
-			}
+                }
+            }
 
 
 
-			return View(model);
-		}
+            return View(model);
+        }
 
 
 
 
-		#endregion
+        #endregion
 
 
 
-		#region SignOut
+        #region SignOut
 
-		public new async Task<IActionResult> SignOut()
-		{
-			await _signInManager.SignOutAsync();
-			return RedirectToAction(nameof(SignIn));
-		}
+        public new async Task<IActionResult> SignOut()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction(nameof(SignIn));
+        }
 
 
 
-		#endregion
+        #endregion
 
 
 
-		#region Reset Password
+        #region Reset Password
 
 
 
-		[HttpGet]
-		public IActionResult ForgetPassword()
-		{
-			return View();
-		}
+        [HttpGet]
+        public IActionResult ForgetPassword()
+        {
+            return View();
+        }
 
 
 
 
-		[HttpPost]
+        [HttpPost]
 
-		public async Task<IActionResult> SendResetPassword(ForgetPasswordViewModel model)
-		{
-			if (ModelState.IsValid)
-			{
-				var user = await _manager.FindByEmailAsync(model.Email);
-				if (user is not null)
-				{
-					var token = await _manager.GeneratePasswordResetTokenAsync(user);
+        public async Task<IActionResult> SendResetPassword(ForgetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _manager.FindByEmailAsync(model.Email);
+                if (user is not null)
+                {
+                    var token = await _manager.GeneratePasswordResetTokenAsync(user);
 
-					var url = Url.Action("ResetPassword", "Account", new { email = model.Email, token }, Request.Scheme);
+                    var url = Url.Action("ResetPassword", "Account", new { email = model.Email, token }, Request.Scheme);
 
-					var email = new Email
-					{
-						To = model.Email,
-						Subject = "Reset Password",
-						Body = url
+                    var email = new Email
+                    {
+                        To = model.Email,
+                        Subject = "Reset Password",
+                        Body = url
 
-					};
+                    };
 
-					EmailSettings.SendEmail(email);
-					////////////////////// Send Email here
+                    EmailSettings.SendEmail(email);
+                    ////////////////////// Send Email here
 
-					return RedirectToAction(nameof(CheckYourEmail));
+                    return RedirectToAction(nameof(CheckYourEmail));
 
-				}
-				else { ModelState.AddModelError(string.Empty, "invalid Operation , Try Again !!"); }
+                }
+                else { ModelState.AddModelError(string.Empty, "invalid Operation , Try Again !!"); }
 
-			}
+            }
 
 
-			return View("ForgetPassword", model);
+            return View("ForgetPassword", model);
 
-		}
+        }
 
 
-		[HttpGet]
-		public IActionResult CheckYourEmail()
-		{
-			return View();
-		}
+        [HttpGet]
+        public IActionResult CheckYourEmail()
+        {
+            return View();
+        }
 
 
 
 
-		[HttpGet]
-		public IActionResult ResetPassword(string email, string token)
-		{
-			TempData["email"] = email;
-			TempData["token"] = token;
+        [HttpGet]
+        public IActionResult ResetPassword(string email, string token)
+        {
+            TempData["email"] = email;
+            TempData["token"] = token;
 
 
 
-			return View();
-		}
+            return View();
+        }
 
 
-		[HttpPost]
-		public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
-		{
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
 
-			if (ModelState.IsValid)
-			{
+            if (ModelState.IsValid)
+            {
+                try
+                {
 
-				var email = TempData["email"] as string;
-				var token = TempData["token"] as string;
+                    var email = TempData["email"] as string;
+                    var token = TempData["token"] as string;
 
-				var user = await _manager.FindByEmailAsync(email);
+                    var user = await _manager.FindByEmailAsync(email);
 
-				if (user is not null)
-				{
-					var result = await _manager.ResetPasswordAsync(user, token, model.Password);
+                    if (user is not null)
+                    {
+                        var result = await _manager.ResetPasswordAsync(user, token, model.Password);
 
-					if (result.Succeeded)
-					{
-						return RedirectToAction(nameof(SignIn));
-					}
-				}
+                        if (result.Succeeded)
+                        {
+                            return RedirectToAction(nameof(SignIn));
+                        }
+                    }
 
 
-				ModelState.AddModelError(string.Empty, "invalid Operation , Try Again !!");
-			}
+                    ModelState.AddModelError(string.Empty, "invalid Operation , Try Again !!");
+                }
+                catch (Exception ex)
+                {
 
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+            }
 
 
-			return View(model);
-		}
 
+            return View(model);
+        }
 
-		#endregion
 
+        #endregion
 
 
-	}
+        public IActionResult AccessDenied()
+        {
+
+            return View();
+        }
+
+
+
+
+
+
+    }
 }

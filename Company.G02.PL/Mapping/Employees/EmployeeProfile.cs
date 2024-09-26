@@ -4,7 +4,7 @@ using Company.G02.PL.ViewModels.Employees;
 
 namespace Company.G02.PL.Mapping.Employees
 {
-    public class EmployeeProfile:Profile
+    public class EmployeeProfile : Profile
     {
 
         public EmployeeProfile()
