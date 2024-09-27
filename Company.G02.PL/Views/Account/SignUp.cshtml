@@ -1,31 +1,36 @@
 ﻿@model SignUpViewModel
 @{
     ViewData["Title"] = "SignUp";
-	Layout = "~/Views/Shared/_AuthSingUpLayout.cshtml";
+    Layout = "~/Views/Shared/_AuthSingUpLayout.cshtml";
 }
 
 <div class="main-agileinfo">
-	<div class="agileits-top">
-		<form asp-action="SignUp">
-			<div class="text center"  asp-validation-summary="All"></div>
-			<input class="text" asp-for="UserName" placeholder="Username" required="">
-			<input class="text" asp-for="FirstName" placeholder="FirstName" required="">
-			<input class="text" asp-for="LastName" placeholder="LastName" required="">
-			<input class="text" asp-for="Email" placeholder="Email" required="">
-			<input class="text" asp-for="Password" placeholder="Password" required="">
-			<input class="text" asp-for="ConfirmPassword" placeholder="ConfirmPassword" required="">
+    <div class="agileits-top">
+        <form asp-action="SignUp">
+            <div class="text center" asp-validation-summary="All"></div>
+            <input class="text" asp-for="UserName" placeholder="Username" required="">
+            <input class="text" asp-for="FirstName" placeholder="FirstName" required="">
+            <input class="text" asp-for="LastName" placeholder="LastName" required="">
+            <input class="text" asp-for="Email" placeholder="Email" required="">
+            <input class="text" asp-for="Password" placeholder="Password" required="">
+            <input class="text" asp-for="ConfirmPassword" placeholder="ConfirmPassword" required="">
 
 
-			<div class="wthree-text">
-				<label class="anim">
-					<input asp-for="IsAgree" type="checkbox" class="checkbox" required="">
-					<span>I Agree To The Terms & Conditions</span>
-				</label>
-				<div class="clear"> </div>
-			</div>
-			<input type="submit" value="SignUp">
-		</form>
-		<p>Don't have an Account? <a asp-action="SignIn"> Login Now!</a></p>
-	</div>
+
+      
+            <div class="d-flex flex-row">
+
+                <input asp-for="IsAgree" type="checkbox" class="checkbox" required="">
+                <p>I Agree To The Terms & Conditions</p>
+
+            </div>
+           
+            
+
+            <button type="submit" value="SignUp">SignUp</button>
+
+            <p>Do You have an Account? <a asp-action="SignIn"> Login Now!</a></p>
+        </form>
+    </div>
 </div>
 

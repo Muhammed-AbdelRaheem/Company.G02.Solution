@@ -1,7 +1,7 @@
 ﻿@model ForgetPasswordViewModel
 @{
     ViewData["Title"] = "ForgetPassword";
-	Layout = "~/Views/Shared/_AuthForgetPasswordLayout.cshtml";
+	Layout = "~/Views/Shared/_AuthCheckPasswordLayout.cshtml";
 }
 
 
@@ -17,7 +17,7 @@
 		<form asp-action="">
 
 			<div>
-				<p>Reset Password Link Has Been Sent To Your Email , Please Check Your Email</p>
+				<p class="fs-6">Reset Password Link Has Been Sent To Your Email , Please Check Your Email</p>
 			</div>
 			<div>
 				<a href="https://mail.google.com/" target="_blank">Your Inbox</a>
