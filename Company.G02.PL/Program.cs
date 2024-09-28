@@ -6,6 +6,7 @@ using Company.G02.DAL.Models;
 using Company.G02.PL.Mapping.Employees;
 using Company.G02.PL.Mapping.Roles;
 using Company.G02.PL.Mapping.Users;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -35,6 +36,17 @@ namespace Company.G02.PL
 
 			builder.Services.ConfigureApplicationCookie(config => { config.LoginPath = "/Account/SignIn"; config.AccessDeniedPath = "/Account/AccessDenied"; });
 
+			builder.Services.AddAuthentication(o => {
+				o.DefaultAuthenticateScheme = GoogleDefaults.AuthenticationScheme; 
+				o.DefaultChallengeScheme=GoogleDefaults.AuthenticationScheme
+				;
+			}).AddGoogle(o =>
+			{
+				IConfiguration GoogleAuthSection = builder.Configuration.GetSection("Authentication:Google");
+				o.ClientId = GoogleAuthSection["ClientId"];
+				o.ClientSecret = GoogleAuthSection["ClientSecret"];
+
+			});
 
 
 			var app = builder.Build();
