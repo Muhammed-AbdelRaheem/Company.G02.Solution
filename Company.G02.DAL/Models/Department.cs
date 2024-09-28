@@ -10,13 +10,11 @@ namespace Company.G02.DAL.Models
 {
     public class Department : BaseEntity
     {
-        //[Required(ErrorMessage = "Code Is Required")]
         public int Id { get; set; }
-        //[Required(ErrorMessage = "Name Is Required")]
 
         public string Code { get; set; }
 
-        //[DisplayName("DepartmentName")]        
+        [DisplayName("DepartmentName")]        
         
         public string Name { get; set; }
 

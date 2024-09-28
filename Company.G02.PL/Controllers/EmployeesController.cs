@@ -43,6 +43,25 @@ namespace Company.G02.PL.Controllers
 
             return View(Result);
         }
+        public async Task<IActionResult> Search(string InputSearch)
+        {
+            var employees = Enumerable.Empty<Employee>();
+            if (string.IsNullOrEmpty(InputSearch))
+            {
+                employees = await _unitOfwork.EmployeeRepository.GetAllAsync();
+
+            }
+
+            else
+            {
+                employees = await _unitOfwork.EmployeeRepository.GetByNameAsync(InputSearch);
+            }
+
+            var Result = _mapper.Map<IEnumerable<EmployeeViewModel>>(employees);
+
+
+            return PartialView("PartialViews/EmployeeSearchPartialView", Result);
+        }
 
 
         [HttpGet]

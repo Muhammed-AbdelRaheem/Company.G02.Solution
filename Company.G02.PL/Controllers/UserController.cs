@@ -64,6 +64,45 @@ namespace Company.G02.PL.Controllers
 		}
 
 
+        public async Task<IActionResult> Search(string InputSearch)
+        {
+            var users = Enumerable.Empty<UserViewModel>();
+
+            if (string.IsNullOrEmpty(InputSearch))
+            {
+                users = await _userManager.Users.Select(U => new UserViewModel()
+                {
+                    Id = U.Id,
+                    FirstName = U.Firstname,
+                    LastName = U.Lastname,
+                    Email = U.Email,
+                    Roles = _userManager.GetRolesAsync(U).GetAwaiter().GetResult()
+                }
+                ).ToListAsync();
+            }
+
+            else
+            {
+
+                users = await _userManager.Users.Where(U => U.Firstname.
+                                    ToLower().
+                                    Contains(InputSearch.ToLower())).
+                        Select(U => new UserViewModel()
+                        {
+                            Id = U.Id,
+                            FirstName = U.Firstname,
+                            LastName = U.Lastname,
+                            Email = U.Email,
+                            Roles = _userManager.GetRolesAsync(U).GetAwaiter().GetResult()
+                        }).ToListAsync();
+            }
+
+
+
+            return PartialView("UserPartialViews/UserSearchPartialView", users);
+        }
+
+
 
         public async Task<IActionResult> Details(string id, string viewName = "Details")
         {

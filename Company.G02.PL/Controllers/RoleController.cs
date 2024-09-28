@@ -60,6 +60,40 @@ namespace Company.G02.PL.Controllers
 
         }
 
+        public async Task<IActionResult> Search(string InputSearch)
+        {
+
+
+            if (string.IsNullOrEmpty(InputSearch))
+            {
+                var Roles = await _roleManager.Roles.ToListAsync();
+
+                var MappedRole = _mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleViewModel>>(Roles);
+                return View(MappedRole);
+            }
+
+            else
+            {
+
+                //var Role = await _roleManager.FindByNameAsync(InputSearch);
+
+                //var MappedRole = _mapper.Map<IdentityRole, RoleViewModel>(Role);
+                var Roles = await _roleManager.Roles.Where(R => R.Name.
+                                      ToLower().
+                                      Contains(InputSearch.ToLower())).
+                          Select(R => new RoleViewModel()
+                          {
+                              Id = R.Id,
+                              RoleName = R.Name
+                          }).ToListAsync();
+
+                return PartialView("RolePartialViews/RoleSearchPartialView", Roles);
+
+            }
+
+
+        }
+
 
         public IActionResult Create()
         {

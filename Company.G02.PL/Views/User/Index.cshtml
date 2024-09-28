@@ -12,7 +12,7 @@
     <div class="row">
 
         <div class="col-8">
-            <input type="text" name="InputSearch" class="form-control" />
+            <input type="text" name="InputSearch" id="InputSearch" placeholder="Search By First Name" class="form-control" />
         </div>
         <div class="col-4">
             <input type="submit" value="search" class="btn btn-outline-info" />
@@ -71,3 +71,22 @@ else
 
 
 
+<script>
+    const searchBar = $('#InputSearch');
+    const table = $('table');
+    searchBar.on('keyup', function (event) {
+        var searchValue = searchBar.val();
+        $.ajax({
+           url:'/User/Search',
+           type :'Get',
+            data: { InputSearch: searchValue },
+            success: function (result) {
+                table.html(result)
+            },
+            error: function (xhr, status, error) {
+                console.log(error)
+            }
+
+        })
+    })
+</script>

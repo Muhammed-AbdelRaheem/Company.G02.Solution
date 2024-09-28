@@ -12,6 +12,7 @@ namespace Company.G02.PL.ViewModels.Departments
 
         public string Code { get; set; }
 
+
         [DisplayName("DepartmentName")]
 
         public string Name { get; set; }

@@ -9,27 +9,18 @@
 <br />
 <br />
 
-@* <div class="alert alert-danger">
-    <p>
-        @ViewData["Data01"];
-    </p>
-</div>
-<div class="alert alert-danger">
-    <p>
-        @ViewData["Data02"];
-    </p>
-</div> *@
+
 
 <form asp-action="Index">
-   <div class="row">
+    <div class="row">
 
-        <div class ="col-8">
-            <input  type="text" name="InputSearch" class="form-control" />
-        </div>        
+        <div class="col-8">
+            <input type="text" name="InputSearch" id="InputSearch" placeholder="Search By Name" class="form-control" />
+        </div>
         <div class="col-4">
             <input type="submit" value="search" class="btn btn-outline-info" />
         </div>
-   </div>
+    </div>
 
 
 </form>
@@ -42,7 +33,7 @@
             @TempData["Message"]
         </p>
     </div>
-  
+
 }
 
 
@@ -69,7 +60,7 @@
                 <th>Delete</th>
             </tr>
         </thead>
-        <tbody >
+        <tbody>
             @foreach (var employee in Model)
             {
                 <tr class="text-center">
@@ -78,7 +69,7 @@
                     </td>
 
                     <td>@employee.Name</td>
-                    <td >@employee.WorkFor?.Name</td>
+                    <td>@employee.WorkFor?.Name</td>
                     <td>@employee.Age</td>
                     <td>@employee.Address</td>
                     <td>@Html.DisplayFor(E => employee.Email)</td>
@@ -103,3 +94,27 @@ else
 
 
 
+
+
+
+
+
+<script>
+    const searchBar = $('#InputSearch');
+    const table = $('table');
+    searchBar.on('keyup', function (event) {
+        var searchValue = searchBar.val();
+        $.ajax({
+           url:'/Employees/Search',
+           type :'Get',
+            data: {InputSearch : searchValue},
+            success: function (result) {
+                table.html(result)
+            },
+            error: function (xhr, status, error) {
+                console.log(error)
+            }
+
+        })
+    })
+</script>
