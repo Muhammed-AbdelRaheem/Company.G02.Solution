@@ -1,40 +1,27 @@
-﻿
-
-@model SingInViewModel
+﻿@model SingInViewModel
 @{
     ViewData["Title"] = "SignIn";
-	Layout = "~/Views/Shared/_AuthSingInLayout.cshtml";
+    Layout = "~/Views/Shared/_AuthSingInLayout.cshtml";
 }
 
 
 
-<div class="main-agileinfo">
-	<div class="agileits-top">
-		<div class="text-center" asp-validation-summary="All"></div>
-		<form asp-action="SignIn">
+ <form asp-action="SignIn">
 
- 			<input class="text email" asp-for="Email" placeholder="Email" required="">
-			<input class="text" asp-for="Password" placeholder="Password" required="">
- 
+    <input class="text email" asp-for="Email" placeholder="Email" required="">
+    <input class="text" asp-for="Password" placeholder="Password" required="">
+    
+        <input asp-for="RememberMe" type="checkbox" class="checkbox">
+        <span>Remember Me</span>
+    
+        <p>Don't have an Account? <a asp-action="SignUp"> Register Now!</a></p>
 
-			<div class="wthree-text">
-				<label class="anim">
-					<input asp-for="RememberMe" type="checkbox" class="checkbox" >
-					<span>Remember Me</span>
-				</label>
-				<div class="clear"> </div>
-			</div>
-			<input type="submit" value="SingIn">
-		</form>
+	<button type="submit" >Login</button>
 
-		<div class="d-flex justify-content-center align-items-center flex-column ">
+</form>
 
-			<p>Don't have an Account? <a asp-action="SignUp"> Register Now!</a></p>
-
-			<a asp-action="ForgetPassword" class="text-white"> Forget Password !!</a>
-
-		</div>
-
-	</div>
+<div class="text-center d-flex justify-content-between mt-3">
+    <a asp-action="GoogleLogin"> <span><i class="fa-brands fa-google"></i></span> Login </a>
+	<a class="text-center" asp-action="ForgetPassword" >Forgot password ?</a>
 </div>
 
