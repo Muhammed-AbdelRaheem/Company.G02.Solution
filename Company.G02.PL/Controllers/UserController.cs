@@ -37,6 +37,7 @@ namespace Company.G02.PL.Controllers
 					FirstName = U.Firstname,
 					LastName = U.Lastname,
 					Email = U.Email,
+                    PhoneNumber= U.PhoneNumber,
 					Roles = _userManager.GetRolesAsync(U).GetAwaiter().GetResult()
 				}
 				).ToListAsync();
@@ -76,6 +77,7 @@ namespace Company.G02.PL.Controllers
                     FirstName = U.Firstname,
                     LastName = U.Lastname,
                     Email = U.Email,
+                    PhoneNumber=U.PhoneNumber,
                     Roles = _userManager.GetRolesAsync(U).GetAwaiter().GetResult()
                 }
                 ).ToListAsync();
@@ -93,6 +95,7 @@ namespace Company.G02.PL.Controllers
                             FirstName = U.Firstname,
                             LastName = U.Lastname,
                             Email = U.Email,
+                            PhoneNumber=U.PhoneNumber,
                             Roles = _userManager.GetRolesAsync(U).GetAwaiter().GetResult()
                         }).ToListAsync();
             }
@@ -158,7 +161,7 @@ namespace Company.G02.PL.Controllers
                     userFromDb.Firstname = model.FirstName;
                     userFromDb.Lastname = model.LastName;
                     userFromDb.Email = model.Email;
-
+                    userFromDb.PhoneNumber=model.PhoneNumber;
 
                     var result = await _userManager.UpdateAsync(userFromDb);
 

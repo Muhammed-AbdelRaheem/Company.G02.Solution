@@ -37,6 +37,8 @@
                 <th>@Html.DisplayNameFor(E => E.FirstName)</th>
                 <th>@Html.DisplayNameFor(E => E.LastName)</th>
                 <th>@Html.DisplayNameFor(E => E.Email)</th>
+                <th>@Html.DisplayNameFor(E => E.PhoneNumber)</th>
+
                 <th>@Html.DisplayNameFor(E => E.Roles)</th>
                 <th>Details</th>
                 <th>Update</th>
@@ -51,6 +53,8 @@
                     <td> @user.FirstName</td>
                     <td> @user.LastName</td>
                     <td> @user.Email</td>
+                    <td> @user.PhoneNumber</td>
+
                     <td>
                         <span class="badge rounded-pill bg-primary">@string.Join("-", user.Roles)</span>
                     </td>

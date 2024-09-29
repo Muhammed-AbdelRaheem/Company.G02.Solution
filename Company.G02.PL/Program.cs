@@ -3,9 +3,11 @@ using Company.G02.BLL.Interfaces;
 using Company.G02.BLL.Repositories;
 using Company.G02.DAL.Data.Contexts;
 using Company.G02.DAL.Models;
+using Company.G02.PL.Mapping;
 using Company.G02.PL.Mapping.Employees;
 using Company.G02.PL.Mapping.Roles;
 using Company.G02.PL.Mapping.Users;
+using Company.G02.PL.Settings;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -36,18 +38,20 @@ namespace Company.G02.PL
 
 			builder.Services.ConfigureApplicationCookie(config => { config.LoginPath = "/Account/SignIn"; config.AccessDeniedPath = "/Account/AccessDenied"; });
 
-			builder.Services.AddAuthentication(o => {
-				o.DefaultAuthenticateScheme = GoogleDefaults.AuthenticationScheme; 
-				o.DefaultChallengeScheme=GoogleDefaults.AuthenticationScheme
-				;
-			}).AddGoogle(o =>
-			{
-				IConfiguration GoogleAuthSection = builder.Configuration.GetSection("Authentication:Google");
-				o.ClientId = GoogleAuthSection["ClientId"];
-				o.ClientSecret = GoogleAuthSection["ClientSecret"];
+			//builder.Services.AddAuthentication(o => {
+			//	o.DefaultAuthenticateScheme = GoogleDefaults.AuthenticationScheme; 
+			//	o.DefaultChallengeScheme=GoogleDefaults.AuthenticationScheme
+			//	;
+			//}).AddGoogle(o =>
+			//{
+			//	IConfiguration GoogleAuthSection = builder.Configuration.GetSection("Authentication:Google");
+			//	o.ClientId = GoogleAuthSection["ClientId"];
+			//	o.ClientSecret = GoogleAuthSection["ClientSecret"];
 
-			});
+			//});
 
+			builder.Services.Configure<TwilloSettings>(builder.Configuration.GetSection("Twilio"));
+			builder.Services.AddTransient<ISmsService, SmsService>();
 
 			var app = builder.Build();
 

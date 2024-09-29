@@ -10,6 +10,7 @@ namespace Company.G02.PL.Mapping.Employees
         public EmployeeProfile()
         {
             CreateMap<Employee, EmployeeViewModel>().ReverseMap();
+
         }
     }
 }
