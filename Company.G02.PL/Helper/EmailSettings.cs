@@ -14,7 +14,7 @@ namespace Company.G02.PL.Helper
 			client.Credentials = new NetworkCredential("muhammedbika22@gmail.com", "dyxghpdkgxpgbycb");
 
 			client.Send("muhammedbika22@gmail.com",email.To,email.Subject,email.Body);
-			//dyxghpdkgxpgbycb
+
 
 		}
 	}

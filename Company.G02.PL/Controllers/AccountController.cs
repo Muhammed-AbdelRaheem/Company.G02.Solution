@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Company.G02.PL.Mapping;
 
 namespace Company.G02.PL.Controllers
 {
@@ -12,11 +13,16 @@ namespace Company.G02.PL.Controllers
     {
         private readonly UserManager<ApplicationUser> _manager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ISmsService _sms;
 
-        public AccountController(UserManager<ApplicationUser> manager, SignInManager<ApplicationUser> SignInManager)
+        public AccountController(
+            UserManager<ApplicationUser> manager, 
+            SignInManager<ApplicationUser> SignInManager,
+            ISmsService sms)
         {
             _manager = manager;
             _signInManager = SignInManager;
+            _sms = sms;
         }
 
 
@@ -161,31 +167,31 @@ namespace Company.G02.PL.Controllers
         }
 
 
-		public IActionResult GoogleLogin()
-		{
-            var prop = new AuthenticationProperties()
-			{
-				RedirectUri = Url.Action(nameof(GoogleResponse))
-			};
-			return Challenge(prop, GoogleDefaults.AuthenticationScheme);
-		}
+		//public IActionResult GoogleLogin()
+		//{
+  //          var prop = new AuthenticationProperties()
+		//	{
+		//		RedirectUri = Url.Action(nameof(GoogleResponse))
+		//	};
+		//	return Challenge(prop, GoogleDefaults.AuthenticationScheme);
+		//}
 
 
-        public async Task<IActionResult> GoogleResponse()
-		{
-			var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
-			var claims = result.Principal.Identities.FirstOrDefault().Claims.Select(
+  //      public async Task<IActionResult> GoogleResponse()
+		//{
+		//	var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+		//	var claims = result.Principal.Identities.FirstOrDefault().Claims.Select(
 
-				claim => new
-				{
-					claim.Issuer,
-					claim.OriginalIssuer,
-					claim.Type,
-					claim.Value
-				}
-				);
-			return RedirectToAction("Index", "Home");
-		}
+		//		claim => new
+		//		{
+		//			claim.Issuer,
+		//			claim.OriginalIssuer,
+		//			claim.Type,
+		//			claim.Value
+		//		}
+		//		);
+		//	return RedirectToAction("Index", "Home");
+		//}
 		#endregion
 
 
@@ -239,7 +245,6 @@ namespace Company.G02.PL.Controllers
                     };
 
                     EmailSettings.SendEmail(email);
-                    ////////////////////// Send Email here
 
                     return RedirectToAction(nameof(CheckYourEmail));
 
@@ -254,7 +259,54 @@ namespace Company.G02.PL.Controllers
         }
 
 
-        [HttpGet]
+        [HttpPost]
+
+        public async Task<IActionResult> SendSms(ForgetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _manager.FindByEmailAsync(model.Email);
+                if (user is not null)
+                {
+                    var token = await _manager.GeneratePasswordResetTokenAsync(user);
+
+                    var url = Url.Action("ResetPassword", "Account", new { email = model.Email, token }, Request.Scheme);
+
+                    var sms = new SmsMessage()
+                    {
+                        PhoneNumber = user.PhoneNumber,
+                        Body=url
+                    };
+
+                    _sms.SendSms(sms);
+					return RedirectToAction(nameof(CheckYourPhone));
+
+				}
+				else { ModelState.AddModelError(string.Empty, "invalid Operation , Try Again !!"); }
+
+            }
+
+
+            return View("ForgetPassword", model);
+
+        }
+
+
+		[HttpGet]
+
+		public IActionResult SendByEmailOrPassword()
+		{
+			return View();
+		}
+
+		[HttpGet]
+		public IActionResult CheckYourPhone()
+		{
+			return View();
+		}
+
+
+		[HttpGet]
         public IActionResult CheckYourEmail()
         {
             return View();

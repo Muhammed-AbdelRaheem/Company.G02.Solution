@@ -6,22 +6,22 @@
 
 
 
- <form asp-action="SignIn">
+<form asp-action="SignIn">
 
     <input class="text email" asp-for="Email" placeholder="Email" required="">
     <input class="text" asp-for="Password" placeholder="Password" required="">
-    
-        <input asp-for="RememberMe" type="checkbox" class="checkbox">
-        <span>Remember Me</span>
-    
-        <p>Don't have an Account? <a asp-action="SignUp"> Register Now!</a></p>
 
-	<button type="submit" >Login</button>
+    <input asp-for="RememberMe" type="checkbox" class="checkbox">
+    <span>Remember Me</span>
+
+    <p>Don't have an Account? <a asp-action="SignUp"> Register Now!</a></p>
+
+    <button type="submit">Login</button>
 
 </form>
 
 <div class="text-center d-flex justify-content-between mt-3">
-    <a asp-action="GoogleLogin"> <span><i class="fa-brands fa-google"></i></span> Login </a>
-	<a class="text-center" asp-action="ForgetPassword" >Forgot password ?</a>
+    @*     <a asp-action="GoogleLogin"> <span><i class="fa-brands fa-google"></i></span> Login </a>
+    *@	<a class="text-center" asp-action="ForgetPassword">Forgot password ?</a>
 </div>
 
