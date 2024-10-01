@@ -24,7 +24,9 @@ namespace Company.G02.PL.Controllers
         public async Task<IActionResult> Index()
         {
             var departments =await unitOfwork.DepartmentRepository.GetAllAsync();
-            return View(departments);
+            var Result = _mapper.Map<IEnumerable<DepartmentViewModel>>(departments);
+
+            return View(Result);
         }
 
 
@@ -68,7 +70,7 @@ namespace Company.G02.PL.Controllers
             }
             var departmentViewModel = _mapper.Map<DepartmentViewModel>(departments);
 
-            return View(departments);
+            return View(departmentViewModel);
 
         }
 
@@ -84,9 +86,13 @@ namespace Company.G02.PL.Controllers
                 }
 
                 var department = await unitOfwork.DepartmentRepository.GetAsync(id.Value);
+
                 if (department is null)
                 { return NotFound(); }
-                return View(department);
+
+                var departmentViewModel = _mapper.Map<DepartmentViewModel>(department);
+
+                return View(departmentViewModel);
             }
             catch (Exception ex)
             {
@@ -143,7 +149,9 @@ namespace Company.G02.PL.Controllers
                 var department = await unitOfwork.DepartmentRepository.GetAsync(id.Value);
                 if (department is null)
                 { return NotFound(); }
-                return View(department);
+                var departmentViewModel = _mapper.Map<DepartmentViewModel>(department);
+
+                return View(departmentViewModel);
             }
             catch (Exception ex)
             {

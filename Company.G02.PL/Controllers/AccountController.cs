@@ -11,16 +11,16 @@ namespace Company.G02.PL.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<ApplicationUser> _manager;
+        private readonly UserManager<ApplicationUser> _usermanager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ISmsService _sms;
 
         public AccountController(
-            UserManager<ApplicationUser> manager, 
-            SignInManager<ApplicationUser> SignInManager,
-            ISmsService sms)
+                                   UserManager<ApplicationUser> manager, 
+                                   SignInManager<ApplicationUser> SignInManager,
+                                   ISmsService sms)
         {
-            _manager = manager;
+            _usermanager = manager;
             _signInManager = SignInManager;
             _sms = sms;
         }
@@ -43,11 +43,11 @@ namespace Company.G02.PL.Controllers
             {
                 try
                 {
-                    var user = await _manager.FindByNameAsync(model.UserName);
+                    var user = await _usermanager.FindByNameAsync(model.UserName);
 
                     if (user is null)
                     {
-                        user = await _manager.FindByEmailAsync(model.Email);
+                        user = await _usermanager.FindByEmailAsync(model.Email);
 
                         if (user is null)
                         {
@@ -61,7 +61,7 @@ namespace Company.G02.PL.Controllers
                             };
 
 
-                            var Result = await _manager.CreateAsync(user, model.Password);
+                            var Result = await _usermanager.CreateAsync(user, model.Password);
 
                             if (Result.Succeeded)
                             {
@@ -121,11 +121,11 @@ namespace Company.G02.PL.Controllers
             {
                 try
                 {
-                    var user = await _manager.FindByEmailAsync(model.Email);
+                    var user = await _usermanager.FindByEmailAsync(model.Email);
 
                     if (user is not null)
                     {
-                        var password = await _manager.CheckPasswordAsync(user, model.Password);
+                        var password = await _usermanager.CheckPasswordAsync(user, model.Password);
 
                         if (password)
                         {
@@ -167,31 +167,31 @@ namespace Company.G02.PL.Controllers
         }
 
 
-		//public IActionResult GoogleLogin()
-		//{
-  //          var prop = new AuthenticationProperties()
-		//	{
-		//		RedirectUri = Url.Action(nameof(GoogleResponse))
-		//	};
-		//	return Challenge(prop, GoogleDefaults.AuthenticationScheme);
-		//}
+		public IActionResult GoogleLogin()
+		{
+            var prop = new AuthenticationProperties()
+			{
+				RedirectUri = Url.Action(nameof(GoogleResponse))
+			};
+			return Challenge(prop, GoogleDefaults.AuthenticationScheme);
+		}
 
 
-  //      public async Task<IActionResult> GoogleResponse()
-		//{
-		//	var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
-		//	var claims = result.Principal.Identities.FirstOrDefault().Claims.Select(
+        public async Task<IActionResult> GoogleResponse()
+		{
+			var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+			var claims = result.Principal.Identities.FirstOrDefault().Claims.Select(
 
-		//		claim => new
-		//		{
-		//			claim.Issuer,
-		//			claim.OriginalIssuer,
-		//			claim.Type,
-		//			claim.Value
-		//		}
-		//		);
-		//	return RedirectToAction("Index", "Home");
-		//}
+				claim => new
+				{
+					claim.Issuer,
+					claim.OriginalIssuer,
+					claim.Type,
+					claim.Value
+				}
+				);
+			return RedirectToAction("Index", "Home");
+		}
 		#endregion
 
 
@@ -229,10 +229,10 @@ namespace Company.G02.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _manager.FindByEmailAsync(model.Email);
+                var user = await _usermanager.FindByEmailAsync(model.Email);
                 if (user is not null)
                 {
-                    var token = await _manager.GeneratePasswordResetTokenAsync(user);
+                    var token = await _usermanager.GeneratePasswordResetTokenAsync(user);
 
                     var url = Url.Action("ResetPassword", "Account", new { email = model.Email, token }, Request.Scheme);
 
@@ -265,10 +265,10 @@ namespace Company.G02.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _manager.FindByEmailAsync(model.Email);
+                var user = await _usermanager.FindByEmailAsync(model.Email);
                 if (user is not null)
                 {
-                    var token = await _manager.GeneratePasswordResetTokenAsync(user);
+                    var token = await _usermanager.GeneratePasswordResetTokenAsync(user);
 
                     var url = Url.Action("ResetPassword", "Account", new { email = model.Email, token }, Request.Scheme);
 
@@ -339,11 +339,11 @@ namespace Company.G02.PL.Controllers
                     var email = TempData["email"] as string;
                     var token = TempData["token"] as string;
 
-                    var user = await _manager.FindByEmailAsync(email);
+                    var user = await _usermanager.FindByEmailAsync(email);
 
                     if (user is not null)
                     {
-                        var result = await _manager.ResetPasswordAsync(user, token, model.Password);
+                        var result = await _usermanager.ResetPasswordAsync(user, token, model.Password);
 
                         if (result.Succeeded)
                         {

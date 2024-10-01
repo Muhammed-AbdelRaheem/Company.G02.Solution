@@ -6,7 +6,8 @@ namespace Company.G02.PL.Mapping.Departments
 {
     public class DepartmentProfile:Profile
     {
-        public DepartmentProfile() { 
+        public DepartmentProfile()
+        { 
         
         CreateMap<Department,DepartmentViewModel>().ReverseMap();
         }

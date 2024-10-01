@@ -18,8 +18,7 @@ namespace Company.G02.PL.Controllers
                                     IUnitOfwork unitOfwork,
                                     IMapper mapper)
         {
-            //_employeeRepository = employeeRepository;
-            //_departmentRepository = departmentRepository;
+            
             _unitOfwork = unitOfwork;
             _mapper = mapper;
         }
