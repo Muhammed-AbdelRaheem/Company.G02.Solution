@@ -24,7 +24,6 @@ namespace Company.G02.DAL.Data.Contexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            //modelBuilder.ApplyConfiguration(new DepartmentConfiguration());
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
