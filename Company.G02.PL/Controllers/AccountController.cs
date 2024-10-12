@@ -167,31 +167,31 @@ namespace Company.G02.PL.Controllers
         }
 
 
-		public IActionResult GoogleLogin()
-		{
-            var prop = new AuthenticationProperties()
-			{
-				RedirectUri = Url.Action(nameof(GoogleResponse))
-			};
-			return Challenge(prop, GoogleDefaults.AuthenticationScheme);
-		}
+		//public IActionResult GoogleLogin()
+		//{
+  //          var prop = new AuthenticationProperties()
+		//	{
+		//		RedirectUri = Url.Action(nameof(GoogleResponse))
+		//	};
+		//	return Challenge(prop, GoogleDefaults.AuthenticationScheme);
+		//}
 
 
-        public async Task<IActionResult> GoogleResponse()
-		{
-			var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
-			var claims = result.Principal.Identities.FirstOrDefault().Claims.Select(
+  //      public async Task<IActionResult> GoogleResponse()
+		//{
+		//	var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+		//	var claims = result.Principal.Identities.FirstOrDefault().Claims.Select(
 
-				claim => new
-				{
-					claim.Issuer,
-					claim.OriginalIssuer,
-					claim.Type,
-					claim.Value
-				}
-				);
-			return RedirectToAction("Index", "Home");
-		}
+		//		claim => new
+		//		{
+		//			claim.Issuer,
+		//			claim.OriginalIssuer,
+		//			claim.Type,
+		//			claim.Value
+		//		}
+		//		);
+		//	return RedirectToAction("Index", "Home");
+		//}
 		#endregion
 
 

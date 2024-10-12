@@ -7,7 +7,7 @@
 
 
 <form asp-action="SignIn">
-
+    
     <input class="text email" asp-for="Email" placeholder="Email" required="">
     <input class="text" asp-for="Password" placeholder="Password" required="">
 
@@ -18,14 +18,16 @@
 
     <button type="submit">Login</button>
 
+
 </form>
 
-<div class="text-center d-flex justify-content-between mt-3">
+<div class="text-center mt-3">
 
-    <a asp-action="GoogleLogin"> <span><i class="fa-brands fa-google"></i></span> Login </a>
+@*     <a asp-action="GoogleLogin"> <span><i class="fa-brands fa-google"></i></span> Login </a>
+ *@
 
-
-    <a class="text-center" asp-action="ForgetPassword">Forgot password ?</a>
+    <a  asp-action="ForgetPassword">Forgot password ?</a>
+    <div class=" error mt-5" asp-validation-summary="All" ></div>
 
 </div>
 
