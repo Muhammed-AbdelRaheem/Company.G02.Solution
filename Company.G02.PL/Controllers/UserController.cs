@@ -161,7 +161,7 @@ namespace Company.G02.PL.Controllers
                     userFromDb.Firstname = model.FirstName;
                     userFromDb.Lastname = model.LastName;
                     userFromDb.Email = model.Email;
-                    userFromDb.PhoneNumber = model.PhoneNumber;
+                    userFromDb.PhoneNumber=model.PhoneNumber;
 
                     var result = await _userManager.UpdateAsync(userFromDb);
 
