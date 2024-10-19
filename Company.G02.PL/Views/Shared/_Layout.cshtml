@@ -19,14 +19,14 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                    <ul class="navbar-nav flex-grow-1 text-center">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                          <li class="nav-item">
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Departments" asp-action="Index">Departments</a>
                         </li>
                         <li class="nav-item">
@@ -35,7 +35,7 @@
                     </ul>
                     <ul class="navbar-nav ">
 
-                    @if (User.IsInRole("Admin"))
+                        @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item me-2">
                                 <a class="nav-link text-dark btn btn-outline-light" asp-area="" asp-controller="role" asp-action="Index">Roles</a>
@@ -45,20 +45,20 @@
                                 <a class="nav-link text-dark btn btn-outline-light" asp-area="" asp-controller="user" asp-action="Index">Users</a>
                             </li>
                         }
-                          
-                        
+
+
 
                         <li class="nav-item">
                             <a class="nav-link text-dark btn btn-outline-light" asp-area="" asp-controller="Account" asp-action="SignOut">SignOut</a>
                         </li>
                     </ul>
-                </div> 
+                </div>
             </div>
         </nav>
     </header>
     <div class="container">
         <main role="main" class="pb-3">
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+            <script src="~/lib/jquery/dist/jquery.min.js"></script>
             @RenderBody()
         </main>
     </div>
