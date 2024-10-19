@@ -45,25 +45,26 @@ namespace Company.G02.PL
 
 
             /////GoogleLogin 
-           
-            //builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            //    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, o =>
-            //    {
-            //        o.LoginPath = "/Account/Signin";
-            //        o.ExpireTimeSpan = TimeSpan.FromDays(5);
-            //        o.AccessDeniedPath = "/Account/AccessDenied";
-                    
 
-            //    })
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, o =>
+                {
+                    o.LoginPath = "/Account/Signin";
+                    o.ExpireTimeSpan = TimeSpan.FromDays(5);
+                    o.AccessDeniedPath = "/Account/AccessDenied";
 
 
-            //    .AddGoogle(o =>
-            //    {
-            //        IConfiguration GoogleAuthSection = builder.Configuration.GetSection("Authentication:Google");
-            //        o.ClientId = GoogleAuthSection["ClientId"];
-            //        o.ClientSecret = GoogleAuthSection["ClientSecret"];
+                })
 
-            //    });
+
+                .AddGoogle(o =>
+                {
+                    IConfiguration GoogleAuthSection = builder.Configuration.GetSection("Authentication:Google");
+                    o.ClientId = GoogleAuthSection["ClientId"];
+                    o.ClientSecret = GoogleAuthSection["ClientSecret"];
+                    o.SignInScheme = IdentityConstants.ExternalScheme;
+
+                });
 
             builder.Services.Configure<TwilloSettings>(builder.Configuration.GetSection("Twilio"));
             builder.Services.AddTransient<ISmsService, SmsService>();

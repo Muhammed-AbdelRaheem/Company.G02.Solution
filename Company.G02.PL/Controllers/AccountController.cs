@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Company.G02.PL.Mapping;
+using System.Security.Claims;
 
 namespace Company.G02.PL.Controllers
 {
@@ -167,38 +168,53 @@ namespace Company.G02.PL.Controllers
         }
 
 
-		//public IActionResult GoogleLogin()
-		//{
-  //          var prop = new AuthenticationProperties()
-		//	{
-		//		RedirectUri = Url.Action(nameof(GoogleResponse))
-		//	};
-		//	return Challenge(prop, GoogleDefaults.AuthenticationScheme);
-		//}
+        public IActionResult GoogleLogin()
+        {
+            var prop = new AuthenticationProperties()
+            {
+                RedirectUri = Url.Action(nameof(GoogleResponse))
+            };
+            return Challenge(prop, GoogleDefaults.AuthenticationScheme);
+        }
 
 
-  //      public async Task<IActionResult> GoogleResponse()
-		//{
-		//	var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
-		//	var claims = result.Principal.Identities.FirstOrDefault().Claims.Select(
+        public async Task<IActionResult> GoogleResponse()
+        {
+            var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+            if (!result.Succeeded) return RedirectToAction("Login");
 
-		//		claim => new
-		//		{
-		//			claim.Issuer,
-		//			claim.OriginalIssuer,
-		//			claim.Type,
-		//			claim.Value
-		//		}
-		//		);
-		//	return RedirectToAction("Index", "Home");
-		//}
-		#endregion
+            // Retrieve the user's information from Google claims
+
+            var claims = result.Principal.Identities.FirstOrDefault().Claims
+                .Select(c => new { c.Type, c.Value });
+
+            // Find or create the user in the local database
+
+            var email = result.Principal.FindFirstValue(ClaimTypes.Email);
+
+            var user = await _usermanager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                user = new ApplicationUser { UserName = email, Email = email, Firstname = email.Split("@")[0], Lastname = string.Empty };
+                await _usermanager.CreateAsync(user);
+            }
+
+
+            // Sign in the user
+            await _signInManager.SignInAsync(user, isPersistent: false);
+
+            return RedirectToAction(nameof(HomeController.Index), "Home");
+
+
+        }
+        #endregion
 
 
 
-		#region SignOut
+        #region SignOut
 
-		public new async Task<IActionResult> SignOut()
+        public new async Task<IActionResult> SignOut()
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction(nameof(SignIn));

@@ -14,8 +14,7 @@ namespace Company.G02.DAL.Models
 
         public string Code { get; set; }
 
-        [DisplayName("DepartmentName")]        
-        
+        [DisplayName("Dept_Name")]
         public string Name { get; set; }
 
         public DateTime DateOfCreation { get; set; }
