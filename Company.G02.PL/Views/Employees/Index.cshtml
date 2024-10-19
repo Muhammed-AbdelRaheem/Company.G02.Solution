@@ -10,7 +10,7 @@
 <br />
 
 
-
+ @* Search *@
 <form asp-action="Index">
     <div class="row">
 
@@ -25,6 +25,8 @@
 
 </form>
 
+
+@* Label *@
 @if (!string.IsNullOrEmpty(TempData["Message"] as string))
 {
 
@@ -41,7 +43,9 @@
 
 @if (Model.Count() > 0)
 {
-    <table class="table table-striped table-hover">
+
+    <div class="table-responsive">
+            <table class="table table-striped table-hover ">
         <thead>
             <tr class="text-center">
 
@@ -83,6 +87,8 @@
             }
         </tbody>
     </table>
+
+    </div>
 
 }
 else
