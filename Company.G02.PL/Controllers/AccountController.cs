@@ -291,14 +291,14 @@ namespace Company.G02.PL.Controllers
                     var sms = new SmsMessage()
                     {
                         PhoneNumber = user.PhoneNumber,
-                        Body=url
+                        Body = url
                     };
 
                     _sms.SendSms(sms);
-					return RedirectToAction(nameof(CheckYourPhone));
+                    return RedirectToAction(nameof(CheckYourPhone));
 
-				}
-				else { ModelState.AddModelError(string.Empty, "invalid Operation , Try Again !!"); }
+                }
+                else { ModelState.AddModelError(string.Empty, "invalid Operation , Try Again !!"); }
 
             }
 
@@ -308,21 +308,21 @@ namespace Company.G02.PL.Controllers
         }
 
 
-		[HttpGet]
+        [HttpGet]
 
-		public IActionResult SendByEmailOrPassword()
-		{
-			return View();
-		}
+        public IActionResult SendByEmailOrPassword()
+        {
+            return View();
+        }
 
-		[HttpGet]
-		public IActionResult CheckYourPhone()
-		{
-			return View();
-		}
+        [HttpGet]
+        public IActionResult CheckYourPhone()
+        {
+            return View();
+        }
 
 
-		[HttpGet]
+        [HttpGet]
         public IActionResult CheckYourEmail()
         {
             return View();

@@ -5,12 +5,12 @@
 }
 
 
-
 <form asp-action="SignIn">
 
     <input class="text email" asp-for="Email" placeholder="Email" required="">
     <input class="text" asp-for="Password" placeholder="Password" required="">
 
+    <div class="alert alert-danger p-0 m-0 border-0 invLogin" asp-validation-summary="All"></div>
     <input asp-for="RememberMe" type="checkbox" class="checkbox">
     <span>Remember Me</span>
 
