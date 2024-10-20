@@ -44,7 +44,7 @@ namespace Company.G02.PL
             builder.Services.ConfigureApplicationCookie(config => { config.LoginPath = "/Account/SignIn"; config.AccessDeniedPath = "/Account/AccessDenied"; });
 
 
-            /////GoogleLogin 
+            ///GoogleLogin 
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, o =>
